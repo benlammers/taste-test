@@ -1,9 +1,7 @@
 <script lang="ts">
-    import { Router, Route, Link } from 'svelte-navigator';
-    import Home from './components/Home.svelte';
-    import Start from './components/Start.svelte';
-
-    // export let name: string;
+    import { Router, Route } from 'svelte-navigator';
+    import Home from './pages/Home.svelte';
+    import Start from './pages/Start.svelte';
 </script>
 
 <main>
@@ -22,5 +20,11 @@
         height: 100%;
         text-align: center;
         background: var(--color-subtle);
+        padding-top: 8rem;
+
+        display: grid;
+        justify-content: center;
+        align-content: start;
+        row-gap: 1.6rem;
     }
 </style>

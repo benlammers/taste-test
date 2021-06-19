@@ -16,13 +16,6 @@
         font-size: 1.6rem;
     }
 
-    h1 {
-        color: var(--color-primary);
-        text-transform: uppercase;
-        font-size: 6rem;
-        font-weight: 100;
-    }
-
     p {
         font-size: 1.6rem;
     }
