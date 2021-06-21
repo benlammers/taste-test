@@ -1,27 +1,51 @@
 <script lang="ts">
+    import { fly } from 'svelte/transition';
+
     import ItemList from '../components/ItemList.svelte';
     import { tasteItems, participantItems } from '../stores';
 
     let showItems = true;
+    let showNames = false;
+
+    function goToNextPage() {
+        console.log('NEXT PAGE');
+    }
 </script>
 
 <h1>Lets Get Started</h1>
 <p>Add all the items you would like to test</p>
 <p>Keep this hidden if you would like it to be a blind taste test</p>
 
-<div class="input-list-wrapper">
-    {#if showItems}
-        <ItemList items={tasteItems} label="Add Item" />
+{#if showItems}
+    <div class="input-list-wrapper" transition:fly|local={{ x: -300 }} on:outroend={() => (showNames = true)}>
+        <ItemList items={tasteItems} label="Add Item" placeholder="Item Name" />
+    </div>
+{/if}
+{#if showNames}
+    <div class="input-list-wrapper" transition:fly|local={{ x: 300 }} on:outroend={() => (showItems = true)}>
+        <ItemList items={participantItems} label="Add Participant" placeholder="Participant Name" />
+    </div>
+{/if}
+
+<div class="button-wrapper">
+    {#if !showItems}
+        <button
+            class="btn-secondary"
+            on:click={() => {
+                showNames = false;
+            }}>Back</button
+        >
+        <button class="btn-primary" on:click={goToNextPage}>Continue</button>
     {:else}
-        <ItemList items={participantItems} label="Add Participant" />
+        <button
+            class="btn-primary"
+            on:click={() => {
+                showItems = false;
+            }}
+            >Next
+        </button>
     {/if}
 </div>
-
-<button
-    on:click={() => {
-        showItems = !showItems;
-    }}>Input {showItems ? 'Taste Items' : 'Participants'}</button
->
 
 <style lang="scss">
     p {
@@ -37,14 +61,12 @@
 
     button {
         justify-self: center;
-        display: grid;
-        align-items: center;
+    }
 
-        border: 1px solid lightgray;
-        padding: 12px 16px;
-        font-size: 1.8rem;
-        border-radius: 4px;
-        background: var(--color-primary);
-        cursor: pointer;
+    .button-wrapper {
+        display: grid;
+        grid-template-columns: max-content max-content;
+        justify-content: center;
+        column-gap: 2.4rem;
     }
 </style>

@@ -4,14 +4,15 @@
 
 <script lang="ts">
     import type { Writable } from 'svelte/store';
-    import { quintOut } from 'svelte/easing';
-    import { crossfade } from 'svelte/transition';
     import { flip } from 'svelte/animate';
+    import { fly } from 'svelte/transition';
 
     import type { ListItemType } from '../stores';
+    import TrashIcon from '../icons/TrashIcon.svelte';
 
     export let items: Writable<ListItemType[]>;
     export let label: string;
+    export let placeholder: string;
 
     let newItem: string = '';
     let inputId = numOfLists++;
@@ -25,36 +26,20 @@
     const removeItem = (itemId: number): void => {
         items.update((items) => items.filter((item) => item.id !== itemId));
     };
-
-    const [send, receive] = crossfade({
-        duration: (d) => Math.sqrt(d * 200),
-
-        fallback(node, params) {
-            const style = getComputedStyle(node);
-            const transform = style.transform === 'none' ? '' : style.transform;
-
-            return {
-                duration: 600,
-                easing: quintOut,
-                css: (t) => `
-					transform: ${transform} scale(${t});
-					opacity: ${t}
-				`,
-            };
-        },
-    });
 </script>
 
 <form on:submit|preventDefault={handleAddItem}>
     <label for={`new-item-${inputId}`}>{label}</label>
-    <input type="text" id={`new-item-${inputId}`} bind:value={newItem} />
+    <input type="text" id={`new-item-${inputId}`} {placeholder} bind:value={newItem} />
 </form>
 
 <ul>
     {#each $items as item (item.id)}
-        <li in:receive={{ key: item.id }} out:send={{ key: item.id }} animate:flip={{ duration: 200 }}>
-            {item.name}
-            <button on:click|once={() => removeItem(item.id)}>×</button>
+        <li out:fly|local={{ x: 10 }} in:fly|local={{ y: 50 }} animate:flip>
+            <span>{item.name}</span>
+            <button on:click|once={() => removeItem(item.id)}>
+                <TrashIcon />
+            </button>
         </li>
     {/each}
 </ul>
@@ -67,10 +52,7 @@
         grid-template-columns: max-content 1fr;
         align-items: center;
         column-gap: 1.2rem;
-    }
-
-    input {
-        height: 32px;
+        margin-bottom: 2.4rem;
     }
 
     ul {
@@ -79,28 +61,29 @@
         row-gap: 1.2rem;
 
         padding: 1.2rem 0;
-        height: 40vh;
-        min-height: 20rem;
+        min-height: min(32rem, 40vh);
     }
 
     li {
         display: grid;
         grid-template-columns: 1fr max-content;
         align-items: center;
+        height: min-content;
 
         background: #ffffff;
         box-shadow: var(--shadow-base);
-        padding: 0.8rem 1.2rem;
-
         font-size: 1.8rem;
-    }
-
-    li button {
-        background: red;
-        display: block;
-        font-size: 2.8rem;
         border-radius: 4px;
-        border: none;
-        cursor: pointer;
+        overflow: hidden;
+
+        & button {
+            padding: 1.2rem;
+            background: #c70000;
+            font-size: 2.8rem;
+            border: none;
+            cursor: pointer;
+            display: grid;
+            align-items: center;
+        }
     }
 </style>
