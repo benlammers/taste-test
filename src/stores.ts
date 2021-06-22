@@ -7,5 +7,5 @@ export interface ListItemType {
 
 export const tasteItems = writable<ListItemType[]>([{ name: "apple", id: 1 }, {name: "banana", id: 2 }, {name: "cantelope", id: 3 }, {name: "mango", id: 4 }]);
 // export const items = writable<TasteItemType[]>([]);
-export const participantItems = writable<ListItemType[]>([{ name: "Ben", id: 1 }]);
+export const participantItems = writable<ListItemType[]>([{ name: "Ben", id: 1 }, { name: "Mad", id: 2 }, { name: "George", id: 3 }]);
 // export const participantItems = writable<ListItemType[]>([]);

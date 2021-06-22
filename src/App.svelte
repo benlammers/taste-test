@@ -1,7 +1,8 @@
 <script lang="ts">
     import { Router, Route } from 'svelte-navigator';
     import Home from './pages/Home.svelte';
-    import Start from './pages/Start.svelte';
+    import Setup from './pages/Setup.svelte';
+    import Rank from './pages/Rank.svelte';
 
     let headerHeight: number;
 </script>
@@ -12,8 +13,11 @@
         <Route path="/">
             <Home />
         </Route>
-        <Route path="start">
-            <Start />
+        <Route path="setup">
+            <Setup />
+        </Route>
+        <Route path="rank">
+            <Rank />
         </Route>
     </Router>
 </main>

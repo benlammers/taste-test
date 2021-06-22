@@ -1,5 +1,6 @@
 <script lang="ts">
-    import { fly } from 'svelte/transition';
+    import { flip } from 'svelte/animate';
+    import { fade, fly } from 'svelte/transition';
 
     import ItemList from '../components/ItemList.svelte';
     import { tasteItems, participantItems } from '../stores';
@@ -35,16 +36,14 @@
                 showNames = false;
             }}>Back</button
         >
-        <button class="btn-primary" on:click={goToNextPage}>Continue</button>
-    {:else}
-        <button
-            class="btn-primary"
-            on:click={() => {
-                showItems = false;
-            }}
-            >Next
-        </button>
     {/if}
+    <button
+        class="btn-primary"
+        on:click={() => {
+            showItems = false;
+        }}
+        >Next
+    </button>
 </div>
 
 <style lang="scss">
