@@ -1,16 +1,16 @@
 <script lang="ts">
-    import { flip } from 'svelte/animate';
-    import { fade, fly } from 'svelte/transition';
+    import { fly } from 'svelte/transition';
+    import { useNavigate } from "svelte-navigator";
 
     import ItemList from '../components/ItemList.svelte';
-    import { tasteItems, participantItems } from '../stores';
+    import { store } from '../stores';
+
+
+    const navigate = useNavigate();
 
     let showItems = true;
     let showNames = false;
 
-    function goToNextPage() {
-        console.log('NEXT PAGE');
-    }
 </script>
 
 <h1>Lets Get Started</h1>
@@ -19,12 +19,12 @@
 
 {#if showItems}
     <div class="input-list-wrapper" transition:fly|local={{ x: -300 }} on:outroend={() => (showNames = true)}>
-        <ItemList items={tasteItems} label="Add Item" placeholder="Item Name" />
+        <ItemList items={$store.samples} add={store.addSample} remove={store.removeSample} label="Add Item" placeholder="Item Name" />
     </div>
 {/if}
 {#if showNames}
     <div class="input-list-wrapper" transition:fly|local={{ x: 300 }} on:outroend={() => (showItems = true)}>
-        <ItemList items={participantItems} label="Add Participant" placeholder="Participant Name" />
+        <ItemList items={$store.persons} add={store.addPerson} remove={store.removePerson} label="Add Participant" placeholder="Participant Name" />
     </div>
 {/if}
 
@@ -40,7 +40,11 @@
     <button
         class="btn-primary"
         on:click={() => {
-            showItems = false;
+            if (showItems) {
+                showItems = false;
+            } else {
+                navigate("/rank")
+            }
         }}
         >Next
     </button>

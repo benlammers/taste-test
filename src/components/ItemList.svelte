@@ -3,29 +3,31 @@
 </script>
 
 <script lang="ts">
-    import type { Writable } from 'svelte/store';
     import { flip } from 'svelte/animate';
     import { fly } from 'svelte/transition';
 
     import type { ListItemType } from '../stores';
     import TrashIcon from '../icons/TrashIcon.svelte';
 
-    export let items: Writable<ListItemType[]>;
+    export let items: ListItemType[];
     export let label: string;
     export let placeholder: string;
+
+    export let add: (name: string) => void; 
+    export let remove: (id: number) => void; 
 
     let newItem: string = '';
     let inputId = numOfLists++;
 
     const handleAddItem = (): void => {
-        let newId = $items.length === 0 ? 1 : $items[$items.length - 1].id + 1;
-        items.update((items) => [...items, { name: newItem, id: newId }]);
+        add(newItem);
         newItem = '';
     };
 
     const removeItem = (itemId: number): void => {
-        items.update((items) => items.filter((item) => item.id !== itemId));
+        remove(itemId);
     };
+
 </script>
 
 <form on:submit|preventDefault={handleAddItem}>
@@ -34,7 +36,7 @@
 </form>
 
 <ul>
-    {#each $items as item (item.id)}
+    {#each items as item (item.id)}
         <li out:fly|local={{ x: 10 }} in:fly|local={{ y: 50 }} animate:flip>
             <span>{item.name}</span>
             <button on:click|once={() => removeItem(item.id)}>

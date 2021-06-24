@@ -1,13 +1,16 @@
 <script lang="ts">
-    import {} from 'svelte/animate';
-    import { fade, fly } from 'svelte/transition';
+    import {flip} from "svelte/animate";
+    import {dndzone} from "svelte-dnd-action";
 
-    import { tasteItems, participantItems } from '../stores';
+    import type { ListItemType } from "../stores"
+    import { store } from '../stores';
+
+    // ITERATE THROUGH RESULTS INSTEAD OF PEOPLE?
 
     let currIndex = 0;
-    $: currParticipant = $participantItems[currIndex].id;
+    $: currPersonId = $store.persons[currIndex].id;
 
-    const backParticipant = (): void => {
+    function backParticipant(): void {
         if (currIndex !== 0) {
             currIndex -= 1;
         } else {
@@ -15,24 +18,64 @@
         }
     };
 
-    const nextParticipant = (): void => {
-        if (currIndex <= $participantItems.length - 2) {
+    function nextParticipant(): void {
+        if (currIndex <= $store.persons.length - 2) {
             currIndex += 1;
         } else {
-            console.error('Current index should not go above length of participants');
+            // console.error('Current index should not go above length of participants');
+            
+            // View Results
+            let scores = $store.samples.map((sample) => {
+                return {
+                    name: sample.name,
+                    score: $store.results.map((result) => result.rankings.indexOf(sample.id) + 1).reduce((a, b) => a + b, 0)
+                }
+            }).sort((sampleA, sampleB) => sampleA.score - sampleB.score);
+            alert(scores.map((score, i) => `${i + 1}. ${score.name}\n`).join(" "));
         }
     };
+
+    const flipDurationMs: number = 300;
+   
+    $: currRankings = $store.results.find((result => result.person === currPersonId))?.rankings
+    $: items = [...$store.samples.sort(sortBy(currRankings))]; 
+
+    function sortBy(currRankings: number[] | undefined) {
+        return function (sampleA: ListItemType, sampleB: ListItemType) {
+            if (currRankings === undefined) {
+                throw new TypeError("Could not find player rankings")
+            }
+
+            let indexA = currRankings.findIndex(rank => rank === sampleA.id);
+            let indexB = currRankings.findIndex(rank => rank === sampleB.id);
+
+            return indexA - indexB;
+        }
+    }
+
+    function handleDndConsider(e: any): void {
+        items = e.detail.items;
+    }
+    
+    function handleDndFinalize(e: any): void {
+        items = e.detail.items;
+        store.updateRanks({ person: currPersonId, rankings: items.map(item => item.id) })
+    }
+
+    // TODO: Is this accessible
+    let dropTargetStyle = { outline: "none" };
+
 </script>
 
-<h1>Input Participant Rankings</h1>
+<h1>Input Rankings</h1>
 
-{#each $participantItems as participant (participant.id)}
-    {#if currParticipant === participant.id}
+{#each $store.persons as person (person.id)}
+    {#if currPersonId === person.id}
         <div class="list">
-            <p transition:fade>{participant.name}</p>
-            <ul in:fly={{ x: 50 }} out:fly={{ x: -50 }}>
-                {#each $tasteItems as tasteItem (tasteItem.id)}
-                    <li>
+            <p>{person.name}</p>
+            <ul use:dndzone={{ items, flipDurationMs, dropTargetStyle }} on:consider={handleDndConsider} on:finalize={handleDndFinalize}>
+                {#each items as tasteItem (tasteItem.id)}
+                    <li animate:flip={{duration: flipDurationMs}}>
                         {tasteItem.name}
                     </li>
                 {/each}
@@ -42,7 +85,7 @@
 {/each}
 
 <div class="button-wrapper">
-    {#if currParticipant !== $participantItems[0].id}
+    {#if currPersonId !== $store.persons[0].id}
         <button class="btn-secondary" on:click={backParticipant}>Back</button>
     {/if}
     <button class="btn-primary" on:click={nextParticipant}>Next</button>
