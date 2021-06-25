@@ -1,15 +1,14 @@
 <script lang="ts">
     import { Link } from 'svelte-navigator';
-    import { useNavigate, useLocation } from 'svelte-navigator';
-
-    const navigate = useNavigate();
-    const location = useLocation();
+    import PageWrapper from '../components/PageWrapper.svelte';
 </script>
 
-<h1>Welcome to the Taste Test App</h1>
-<p>Enjoy the tastes and we'll take care of the rest</p>
+<PageWrapper>
+    <h1>Welcome to the Taste Test App</h1>
+    <p>Enjoy the sampling and we'll take care of the rest</p>
 
-<Link to="/setup" class="btn-primary">Start Tasting!</Link>
+    <Link to="/setup" class="btn-primary">Start Tasting!</Link>
+</PageWrapper>
 
 <style lang="scss">
     :global(a) {

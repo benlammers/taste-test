@@ -3,12 +3,9 @@
     import Home from './pages/Home.svelte';
     import Setup from './pages/Setup.svelte';
     import Rank from './pages/Rank.svelte';
-
-    let headerHeight: number;
 </script>
 
-<header bind:clientHeight={headerHeight}>Taste Test</header>
-<main style="--header-height: {headerHeight}px">
+<main>
     <Router>
         <Route path="/">
             <Home />
@@ -22,23 +19,29 @@
     </Router>
 </main>
 
+<!-- 
+    Step 1: Home Page - START TASTING!
+
+    Step 2: Input Category - Single Text Input
+
+    Step 3: Input Samples (Types of Category) - ItemList
+
+    Step 4: Input Participants - Item List
+
+    Step 5: Overview and confirmation: button to input rankings/back button
+
+    Steps 6 -> (# of participants + 6)
+
+    Step 7ish: Middle page - confirm "See Results"
+
+    Step 8: Show results
+-->
 <style type="text/scss">
-    header {
-        background: var(--color-primary);
-        padding: 1.2rem 2.4rem;
-        font-size: 2.4rem;
-    }
-
     main {
-        min-height: calc(100% - var(--header-height));
-        text-align: center;
+        min-height: 100%;
+        width: 100%;
         background: var(--color-subtle);
-        padding-top: 8rem;
-
         display: grid;
-        justify-content: center;
-        align-content: start;
-        row-gap: 1.6rem;
-        padding-bottom: 2.4rem;
+        text-align: center;
     }
 </style>

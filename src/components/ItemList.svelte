@@ -3,36 +3,57 @@
 </script>
 
 <script lang="ts">
+    import Checkmark32 from 'carbon-icons-svelte/lib/Checkmark32';
+    import TrashCan24 from 'carbon-icons-svelte/lib/TrashCan24';
+
     import { flip } from 'svelte/animate';
     import { fly } from 'svelte/transition';
 
     import type { ListItemType } from '../stores';
-    import TrashIcon from '../icons/TrashIcon.svelte';
 
     export let items: ListItemType[];
     export let label: string;
+    export let itemName: string;
     export let placeholder: string;
 
-    export let add: (name: string) => void; 
-    export let remove: (id: number) => void; 
+    export let add: (name: string) => void;
+    export let remove: (id: number) => void;
 
     let newItem: string = '';
+    let newItemError: string = '';
     let inputId = numOfLists++;
 
     const handleAddItem = (): void => {
-        add(newItem);
-        newItem = '';
+        if (!newItem.replace(/\s/g, '')) {
+            newItemError = `${itemName} must not be blank`;
+        } else if (items.filter((item) => item.name === newItem).length > 0) {
+            newItemError = `${itemName} already exists`;
+        } else {
+            add(newItem);
+            newItem = '';
+        }
     };
 
     const removeItem = (itemId: number): void => {
         remove(itemId);
     };
-
 </script>
 
 <form on:submit|preventDefault={handleAddItem}>
     <label for={`new-item-${inputId}`}>{label}</label>
-    <input type="text" id={`new-item-${inputId}`} {placeholder} bind:value={newItem} />
+    <input
+        type="text"
+        id={`new-item-${inputId}`}
+        {placeholder}
+        bind:value={newItem}
+        on:focus={() => (newItemError = '')}
+    />
+    <button type="submit">
+        <Checkmark32 />
+    </button>
+    {#if newItemError}
+        <span>{newItemError}</span>
+    {/if}
 </form>
 
 <ul>
@@ -40,7 +61,7 @@
         <li out:fly|local={{ x: 10 }} in:fly|local={{ y: 50 }} animate:flip>
             <span>{item.name}</span>
             <button on:click|once={() => removeItem(item.id)}>
-                <TrashIcon />
+                <TrashCan24 />
             </button>
         </li>
     {/each}
@@ -51,10 +72,31 @@
         font-size: 1.6rem;
         width: 100%;
         display: grid;
-        grid-template-columns: max-content 1fr;
+        grid-template-columns: 1fr max-content;
         align-items: center;
+        row-gap: 0.6rem;
         column-gap: 1.2rem;
         margin-bottom: 2.4rem;
+
+        label {
+            grid-column: 1 / -1;
+            justify-self: start;
+        }
+
+        button {
+            border: 1px solid var(--color-secondary);
+            background: var(--color-primary);
+            color: #fff;
+            height: 48px;
+            width: 48px;
+            border-radius: 4px;
+        }
+
+        span {
+            grid-column: 1 / -1;
+            color: red;
+            justify-self: start;
+        }
     }
 
     ul {
@@ -78,14 +120,14 @@
         border-radius: 4px;
         overflow: hidden;
 
-        & button {
+        button {
             padding: 1.2rem;
             background: #c70000;
             font-size: 2.8rem;
             border: none;
-            cursor: pointer;
             display: grid;
             align-items: center;
+            color: white;
         }
     }
 </style>

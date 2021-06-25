@@ -1,0 +1,11 @@
+{
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "prettier.jsxSingleQuote": true,
+    "prettier.printWidth": 120,
+    "prettier.singleQuote": true,
+    "svelte.plugin.svelte.format.config.printWidth": 120,
+    "svelte.plugin.svelte.format.config.singleQuote": true,
+    "javascript.preferences.quoteStyle": "single",
+    "typescript.preferences.quoteStyle": "single"
+}
