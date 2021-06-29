@@ -1,0 +1,7 @@
+- handle ties for most loved and most hated
+- finalize spacing in content-wrapper
+- animate between participants ranks
+- fix button styles
+- go over font sizes
+- double check message-wrapper stuff
+- fix input styles

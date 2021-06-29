@@ -56,13 +56,14 @@
     {/if}
 </form>
 
-<ul>
-    {#each items as item (item.id)}
+<ol>
+    {#each items as item, i (item.id)}
         <li out:fly|local={{ x: 10 }} in:fly|local={{ y: 50 }} animate:flip>
+            <div>{i + 1}</div>
             <span>{item.name}</span>
             <button on:click|once={() => removeItem(item.id)}>
                 <TrashCan24 />
             </button>
         </li>
     {/each}
-</ul>
+</ol>

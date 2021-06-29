@@ -1,5 +1,7 @@
 <script lang="ts">
+    import { fade, fly } from 'svelte/transition';
     import { flip } from 'svelte/animate';
+
     import { Link } from 'svelte-navigator';
     import { dndzone } from 'svelte-dnd-action';
 
@@ -8,8 +10,6 @@
     import { rankIndex } from '../stores/steps';
 
     import PageWrapper from '../components/PageWrapper.svelte';
-
-    // ITERATE THROUGH RESULTS INSTEAD OF PEOPLE?
 
     $: currPersonId = $data.persons[$rankIndex].id;
 
@@ -58,6 +58,13 @@
 
     // TODO: Is this accessible
     let dropTargetStyle = { outline: 'none' };
+
+    let prevIndex: number;
+    let transitioning = false;
+
+    const onTransitionEnd = () => {
+        transitioning = false;
+    };
 </script>
 
 <PageWrapper>
@@ -65,31 +72,33 @@
 
     {#each $data.persons as person (person.id)}
         {#if currPersonId === person.id}
-            <h2 class="subtitle">{person.name}</h2>
-            <div class="content-wrapper ranked-list">
-                <p>Rank</p>
-                <div class="ranks">
-                    {#each items as item, i}
-                        <div><span>{i + 1}<sup>{i === 0 ? 'st' : i > 1 ? 'th' : 'nd'}</sup></span></div>
-                    {/each}
+            <h2 class="subtitle-wrapper" transition:fade|local>{person.name}</h2>
+            <div class="content-wrapper" transition:fly|local={{ x: 300 }} on:outroend={onTransitionEnd}>
+                <div class="ranked-list">
+                    <p class="text--sm font--thick">Rank</p>
+                    <div>
+                        {#each items as item, i}
+                            <div><span>{i + 1}<sup>{i === 0 ? 'st' : i > 1 ? 'th' : 'nd'}</sup></span></div>
+                        {/each}
+                    </div>
+                    <ol
+                        use:dndzone={{ items, flipDurationMs, dropTargetStyle }}
+                        on:consider={handleDndConsider}
+                        on:finalize={handleDndFinalize}
+                    >
+                        {#each items as tasteItem (tasteItem.id)}
+                            <li animate:flip={{ duration: flipDurationMs }}>
+                                <div>
+                                    {getIndexOfSample(tasteItem.id)}
+                                </div>
+                                <span>
+                                    {tasteItem.name}
+                                </span>
+                            </li>
+                        {/each}
+                    </ol>
                 </div>
-                <ul
-                    use:dndzone={{ items, flipDurationMs, dropTargetStyle }}
-                    on:consider={handleDndConsider}
-                    on:finalize={handleDndFinalize}
-                >
-                    {#each items as tasteItem (tasteItem.id)}
-                        <li animate:flip={{ duration: flipDurationMs }}>
-                            <div>
-                                {getIndexOfSample(tasteItem.id)}
-                            </div>
-                            <span>
-                                {tasteItem.name}
-                            </span>
-                        </li>
-                    {/each}
-                </ul>
-                <p>Green number is order in which samples were tasted</p>
+                <p class="text--sm">Green number is order in which samples were tasted</p>
             </div>
         {/if}
     {/each}

@@ -9,11 +9,26 @@
     const getSampleName = (id: number): string => {
         return $data.samples.filter((sample) => sample.id === id)[0].name;
     };
+
+    const getIndexOfSample = (id: number): number => {
+        return $data.samples.findIndex((sample) => sample.id === id) + 1;
+    };
 </script>
 
 <h3>{participantName}</h3>
-<ol>
-    {#each result.rankings as ranking}
-        <li>{getSampleName(ranking)}</li>
-    {/each}
-</ol>
+<div class="ranked-list">
+    <p class="text--sm font--thick">Rank</p>
+    <div>
+        {#each result.rankings as ranking, i}
+            <div><span>{i + 1}<sup>{i === 0 ? 'st' : i > 1 ? 'th' : 'nd'}</sup></span></div>
+        {/each}
+    </div>
+    <ol>
+        {#each result.rankings as ranking}
+            <li>
+                <div>{getIndexOfSample(ranking)}</div>
+                <span>{getSampleName(ranking)}</span>
+            </li>
+        {/each}
+    </ol>
+</div>

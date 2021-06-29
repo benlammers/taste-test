@@ -5,7 +5,7 @@
 
     import Checkmark32 from 'carbon-icons-svelte/lib/Checkmark32';
 
-    import { category, categorySet } from '../stores/category';
+    import { category } from '../stores/category';
     import { data } from '../stores/data';
     import { setupStep } from '../stores/steps';
 
@@ -22,7 +22,7 @@
     let sampleTypeError = '';
 
     onMount(() => {
-        prevStep = $setupStep > 1 ? $setupStep : $setupStep - 1;
+        prevStep = $setupStep === 1 ? 2 : $setupStep - 1;
     });
 
     const handleNext = (): void => {
@@ -33,6 +33,8 @@
                 message = 'Sample Type must not be blank';
             } else showNext();
         } else if ($setupStep === 2) {
+            showNext();
+        } else if ($setupStep === 3) {
             if ($data.samples.length < 2) {
                 message = 'Must have at least 2 samples';
             } else showNext();
@@ -48,7 +50,7 @@
         if (!$category.replace(/\s/g, '')) {
             sampleTypeError = 'Sample Category must not be blank';
         } else {
-            $categorySet = true;
+            setupStep.increment();
         }
     };
 
@@ -59,13 +61,9 @@
     };
 
     const showPrev = () => {
-        if ($setupStep === 1) {
-            $categorySet = false;
-        } else {
-            prevStep = $setupStep;
-            setupStep.decrement();
-            transitioning = true;
-        }
+        prevStep = $setupStep;
+        setupStep.decrement();
+        transitioning = true;
     };
 
     const onTransitionEnd = () => {
@@ -74,66 +72,51 @@
 
     // Pulled from template to avoid Typescript error
     $: step2x = $setupStep === 1 ? 300 : -300;
+    $: step3x = $setupStep === 2 ? 300 : -300;
 </script>
 
 <PageWrapper>
     <h1>Lets Get Started</h1>
 
     {#if $setupStep === 1 && !transitioning}
-        {#if !$categorySet}
-            <p
-                class="subtitle-wrapper text--md"
-                in:fade|local={{ duration: 300, delay: 300 }}
-                out:fade|local={{ duration: 300 }}
-            >
-                What category of samples will be tasted today
-            </p>
-        {:else}
-            <p
-                class="subtitle-wrapper text--md"
-                in:fade|local={{ duration: 300, delay: 300 }}
-                out:fade|local={{ duration: 300 }}
-            >
-                Today we will be sampling
-            </p>
-        {/if}
+        <p class="subtitle-wrapper text--sm" transition:fade|local>What category of samples will be tasted today?</p>
         <div class="content-wrapper" transition:fly|local={{ x: -300 }} on:outroend={onTransitionEnd}>
-            {#if !$categorySet}
-                <form
-                    on:submit|preventDefault={handleSampleType}
-                    class:error={sampleTypeError}
-                    in:fade|local={{ duration: 300, delay: 300 }}
-                    out:fade|local={{ duration: 300 }}
-                >
-                    <label for="sample-type">Category of Samples</label>
-                    <input
-                        type="text"
-                        id="sample-type"
-                        placeholder="Category of Samples"
-                        bind:value={$category}
-                        on:focus={() => (sampleTypeError = '')}
-                    />
-                    <button type="submit">
-                        <Checkmark32 />
-                    </button>
-                    {#if sampleTypeError}
-                        <span>{sampleTypeError}</span>
-                    {/if}
-                </form>
-            {:else}
-                <h2 in:fade|local={{ duration: 300, delay: 300 }} out:fade|local={{ duration: 300 }}>{$category}</h2>
-            {/if}
+            <form on:submit|preventDefault={handleSampleType} class:error={sampleTypeError}>
+                <label for="sample-type">Category of Samples</label>
+                <input
+                    type="text"
+                    id="sample-type"
+                    placeholder="Category of Samples"
+                    bind:value={$category}
+                    on:focus={() => (sampleTypeError = '')}
+                />
+                <button type="submit">
+                    <Checkmark32 />
+                </button>
+                {#if sampleTypeError}
+                    <span>{sampleTypeError}</span>
+                {/if}
+            </form>
         </div>
     {:else if $setupStep === 2 && !transitioning}
+        <p class="subtitle-wrapper text--sm" transition:fade|local>Today we will be sampling</p>
+        <div
+            class="content-wrapper"
+            in:fly|local={{ x: prevStep === 2 ? 300 : -300 }}
+            out:fly|local={{ x: step2x }}
+            on:outroend={onTransitionEnd}
+        >
+            <h2>{$category}</h2>
+        </div>
+    {:else if $setupStep === 3 && !transitioning}
         <p class="subtitle-wrapper text--md" transition:fade|local>
-            Add the types of {$category} you will be sampling<br /><strong
-                >in the order you will be tasting them in</strong
-            >
+            Add the types of {$category.toLowerCase()}<br />
+            <span class="text--sm font--bold"> in the order they will be sampled in </span>
         </p>
         <div
             class="content-wrapper"
-            in:fly|local={{ x: prevStep === 1 ? 300 : -300 }}
-            out:fly|local={{ x: step2x }}
+            in:fly|local={{ x: prevStep === 2 ? 300 : -300 }}
+            out:fly|local={{ x: step3x }}
             on:outroend={onTransitionEnd}
         >
             <ItemList
@@ -145,8 +128,8 @@
                 placeholder={`Type of ${$category}`}
             />
         </div>
-    {:else if $setupStep === 3 && !transitioning}
-        <p class="subtitle-wrapper text--md" transition:fade|local>Add the participants of today's taste test</p>
+    {:else if $setupStep === 4 && !transitioning}
+        <p class="subtitle-wrapper text--sm" transition:fade|local>Add today's participants</p>
         <div class="content-wrapper" transition:fly|local={{ x: 300 }} on:outroend={onTransitionEnd}>
             <ItemList
                 items={$data.persons}
@@ -162,10 +145,8 @@
     <span class="message-wrapper">{message}</span>
 
     <div class="button-wrapper" class:error={message}>
-        {#if $setupStep > 1 || $categorySet}
+        {#if $setupStep > 1}
             <button class="btn-secondary" transition:fade|local on:click={showPrev}>Back</button>
-        {/if}
-        {#if $category.replace(/\s/g, '') && $categorySet}
             <button class="btn-primary" transition:fade|local on:click={handleNext}>Next</button>
         {/if}
     </div>

@@ -17,14 +17,15 @@ form.error input {
 form label {
     grid-column: 1 / -1;
     justify-self: start;
+    font-size: var(--text-sm);
 }
 
 form button {
     border: 1px solid var(--color-secondary);
     background: var(--color-primary);
     color: #fff;
-    height: 48px;
-    width: 48px;
+    height: 4.8rem;
+    width: 4.8rem;
     border-radius: 4px;
 }
 
@@ -35,7 +36,7 @@ form span {
 }
 
 input[type='text'] {
-    height: 48px;
+    height: 4.8rem;
     border-radius: 4px;
     padding: 0 24px;
     font-size: 1.6rem;

@@ -8,7 +8,7 @@
     import Setup from './pages/Setup.svelte';
 </script>
 
-<main class="theme--default">
+<main>
     <Router>
         <Route path="/">
             <Welcome />

@@ -6,4 +6,10 @@
 
     --color-turquoise: hsl(177, 20%, 61%);
     --color-blue-light: hsl(206, 64%, 98%);
+
+    // Theme
+    --color-text: var(--color-black);
+    --color-primary: var(--color-turquoise);
+    --color-secondary: var(--color-gray);
+    --color-subtle: var(--color-blue-light);
 }

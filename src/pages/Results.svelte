@@ -8,8 +8,6 @@
 
     let viewResults = false;
 
-    // // View Results
-
     let results = $data.samples.map((sample) => {
         return {
             name: sample.name,
@@ -36,19 +34,28 @@
 <PageWrapper>
     <h1>Results</h1>
 
-    <p class="subtitle" />
+    <p class="subtitle-wrapper" />
 
     <div class="content-wrapper">
         {#if viewResults}
             <h2>Overall</h2>
-            <ol>
-                {#each overall as result}
-                    <li>
-                        {result.name}
-                        Score: {result.score}
-                    </li>
-                {/each}
-            </ol>
+            <p class="text--sm font--thick">Lowest Score Wins</p>
+            <div class="ranked-list">
+                <p class="text--sm font--thick">Rank</p>
+                <div>
+                    {#each overall as result, i}
+                        <div><span>{i + 1}<sup>{i === 0 ? 'st' : i > 1 ? 'th' : 'nd'}</sup></span></div>
+                    {/each}
+                </div>
+                <ol>
+                    {#each overall as result}
+                        <li>
+                            <div>{result.score}</div>
+                            <span>{result.name}</span>
+                        </li>
+                    {/each}
+                </ol>
+            </div>
 
             <h2>Most Loved</h2>
             <p>{mostLoved.name}: {mostLoved.firsts} first places</p>

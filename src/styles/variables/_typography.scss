@@ -1,19 +1,22 @@
 :root {
     --weight-thin: 100;
     --weight-reg: 400;
+    --weight-thick: 500;
     --weight-bold: 700;
 
     --text-xs: 1.2rem;
     --text-sm: 1.6rem;
-    --text-md: 2rem;
+    --text-md: 2.4rem;
     --text-lg: 3.2rem;
     --text-xl: 5.6rem;
+
+    --text-button: 2rem;
 
     @media only screen and (max-width: 576px) {
         --text-xs: 1.2rem;
         --text-sm: 1.6rem;
-        --text-md: 2rem;
+        --text-md: 2.4rem;
         --text-lg: 2.8rem;
-        --text-xl: 4.2rem;
+        --text-xl: 3.6rem;
     }
 }

@@ -13,10 +13,10 @@
 
         height: max-content;
         min-height: min(80rem, 80vh);
-        width: calc(100vw - 48px);
+        width: 100%;
         max-width: 600px;
         margin: 1.2rem auto;
-        padding: 2.4rem;
+        padding: 2.4rem 2.4rem 4.8rem;
 
         display: grid;
         grid-template-rows: max-content max-content 1fr max-content max-content;
@@ -40,6 +40,7 @@
 
             display: grid;
             align-content: start;
+            row-gap: 1.2rem;
         }
 
         .message-wrapper {

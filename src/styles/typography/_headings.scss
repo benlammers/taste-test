@@ -11,3 +11,10 @@ h2 {
     font-size: var(--text-lg);
     font-weight: var(--weight-bold);
 }
+
+h3 {
+    color: var(--color-text);
+    text-transform: uppercase;
+    font-size: var(--text-md);
+    font-weight: var(--weight-thick);
+}
