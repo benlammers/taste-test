@@ -8,7 +8,8 @@
 
 <style lang="scss">
     .page-wrapper {
-        height: 100%;
+        min-height: min(80rem, 80vh);
+        height: max-content;
         width: 100%;
         grid-row: 1 / 2;
         grid-column: 1 / 2;
@@ -20,6 +21,11 @@
 
         display: grid;
         align-content: start;
+        grid-template-rows: max-content max-content 1fr max-content max-content;
         row-gap: 2.4rem;
+
+        @media only screen and (max-width: 576px) {
+            min-height: 100%;
+        }
     }
 </style>

@@ -10,42 +10,40 @@ export interface ResultItemType {
     rankings: number[];
 }
 
-export const sampleType = writable<string>('');
-
-export const store = (() => {
+export const data = (() => {
     const { subscribe, set, update } = writable<{
         samples: ListItemType[];
         persons: ListItemType[];
         results: ResultItemType[];
     }>({
-        samples: [
-            { name: 'apple', id: 1 },
-            { name: 'banana', id: 2 },
-            { name: 'cantelope', id: 3 },
-            { name: 'mango', id: 4 },
-        ],
-        persons: [
-            { name: 'Ben', id: 1 },
-            { name: 'Mad', id: 2 },
-            { name: 'George', id: 3 },
-        ],
-        results: [
-            {
-                person: 1,
-                rankings: [1, 2, 3, 4],
-            },
-            {
-                person: 2,
-                rankings: [1, 2, 3, 4],
-            },
-            {
-                person: 3,
-                rankings: [1, 2, 3, 4],
-            },
-        ],
-        // samples: [],
-        // persons: [],
-        // results: [],
+        // samples: [
+        //     { name: 'apple', id: 1 },
+        //     { name: 'banana', id: 2 },
+        //     { name: 'cantelope', id: 3 },
+        //     { name: 'mango', id: 4 },
+        // ],
+        // persons: [
+        //     { name: 'Ben', id: 1 },
+        //     { name: 'Mad', id: 2 },
+        //     { name: 'George', id: 3 },
+        // ],
+        // results: [
+        //     {
+        //         person: 1,
+        //         rankings: [1, 2, 3, 4],
+        //     },
+        //     {
+        //         person: 2,
+        //         rankings: [1, 2, 3, 4],
+        //     },
+        //     {
+        //         person: 3,
+        //         rankings: [1, 2, 3, 4],
+        //     },
+        // ],
+        samples: [],
+        persons: [],
+        results: [],
     });
 
     const addSample = (newSample: string): void => {

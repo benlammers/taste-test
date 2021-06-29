@@ -1,91 +1,140 @@
 <script lang="ts">
+    import { onMount } from 'svelte';
     import { fade, fly } from 'svelte/transition';
     import { useNavigate } from 'svelte-navigator';
 
-    import { store, sampleType } from '../stores';
+    import Checkmark32 from 'carbon-icons-svelte/lib/Checkmark32';
+
+    import { category, categorySet } from '../stores/category';
+    import { data } from '../stores/data';
+    import { setupStep } from '../stores/steps';
 
     import ItemList from '../components/ItemList.svelte';
     import PageWrapper from '../components/PageWrapper.svelte';
 
     const navigate = useNavigate();
 
-    // let showItems = true;
-    // let showNames = false;
     let message = '';
 
-    let step = 1;
-    let prevStep = step;
+    let prevStep: number;
     let transitioning = false;
+
+    let sampleTypeError = '';
+
+    onMount(() => {
+        prevStep = $setupStep > 1 ? $setupStep : $setupStep - 1;
+    });
 
     const handleNext = (): void => {
         message = '';
 
-        if (step === 1) {
-            if (!$sampleType.replace(/\s/g, '')) {
+        if ($setupStep === 1) {
+            if (!$category.replace(/\s/g, '')) {
                 message = 'Sample Type must not be blank';
             } else showNext();
-        } else if (step === 2) {
-            if ($store.samples.length < 2) {
+        } else if ($setupStep === 2) {
+            if ($data.samples.length < 2) {
                 message = 'Must have at least 2 samples';
             } else showNext();
-        } else if ($store.persons.length < 2) {
+        } else if ($data.persons.length < 2) {
             message = 'Must have at least 2 participants';
         } else {
-            navigate('/rank');
+            navigate('/confirm');
+        }
+    };
+
+    const handleSampleType = () => {
+        sampleTypeError = '';
+        if (!$category.replace(/\s/g, '')) {
+            sampleTypeError = 'Sample Category must not be blank';
+        } else {
+            $categorySet = true;
         }
     };
 
     const showNext = () => {
-        prevStep = step;
-        step += 1;
+        prevStep = $setupStep;
+        setupStep.increment();
         transitioning = true;
     };
 
     const showPrev = () => {
-        prevStep = step;
-        step -= 1;
-        transitioning = true;
+        if ($setupStep === 1) {
+            $categorySet = false;
+        } else {
+            prevStep = $setupStep;
+            setupStep.decrement();
+            transitioning = true;
+        }
     };
 
     const onTransitionEnd = () => {
         transitioning = false;
     };
 
-    let step2x = step === 1 ? 300 : -300;
+    // Pulled from template to avoid Typescript error
+    $: step2x = $setupStep === 1 ? 300 : -300;
 </script>
 
 <PageWrapper>
     <h1>Lets Get Started</h1>
 
-    <p>Add all the items you would like to test</p>
-    <p>Keep this hidden if you would like it to be a blind taste test</p>
-
-    {#if step === 1 && !transitioning}
-        <div class="input-wrapper" transition:fly|local={{ x: -300 }} on:outroend={onTransitionEnd}>
-            <input type="text" placeholder="Type of samples" bind:value={$sampleType} />
+    {#if $setupStep === 1 && !transitioning}
+        {#if !$categorySet}
+            <p class="subtitle" transition:fade|local>What category of samples will be tasted today</p>
+        {:else}
+            <p class="subtitle" transition:fade|local>Today we will be sampling</p>
+        {/if}
+        <div class="content-wrapper" transition:fly|local={{ x: -300 }} on:outroend={onTransitionEnd}>
+            {#if !$categorySet}
+                <form on:submit|preventDefault={handleSampleType} class:error={sampleTypeError}>
+                    <label for="sample-type">Category of Samples</label>
+                    <input
+                        type="text"
+                        id="sample-type"
+                        placeholder="Category of Samples"
+                        bind:value={$category}
+                        on:focus={() => (sampleTypeError = '')}
+                    />
+                    <button type="submit">
+                        <Checkmark32 />
+                    </button>
+                    {#if sampleTypeError}
+                        <span>{sampleTypeError}</span>
+                    {/if}
+                </form>
+            {:else}
+                <h2>{$category}</h2>
+            {/if}
         </div>
-    {:else if step === 2 && !transitioning}
+    {:else if $setupStep === 2 && !transitioning}
+        <p class="subtitle" transition:fade|local>
+            Add the types of {$category} you will be sampling<br /><strong
+                >in the order you will be tasting them in</strong
+            >
+        </p>
         <div
-            class="input-wrapper"
+            class="content-wrapper"
             in:fly|local={{ x: prevStep === 1 ? 300 : -300 }}
             out:fly|local={{ x: step2x }}
             on:outroend={onTransitionEnd}
         >
             <ItemList
-                items={$store.samples}
-                add={store.addSample}
-                remove={store.removeSample}
-                label="Add Sample"
-                itemName="Sample"
-                placeholder="Sample Name"
+                items={$data.samples}
+                add={data.addSample}
+                remove={data.removeSample}
+                label={`Add type of ${$category}`}
+                itemName={$category}
+                placeholder={`Type of ${$category}`}
             />
         </div>
-    {:else if step === 3 && !transitioning}
-        <div class="input-wrapper" transition:fly|local={{ x: 300 }} on:outroend={onTransitionEnd}>
+    {:else if $setupStep === 3 && !transitioning}
+        <p class="subtitle" transition:fade|local>Add the participants of today's taste test</p>
+        <div class="content-wrapper" transition:fly|local={{ x: 300 }} on:outroend={onTransitionEnd}>
             <ItemList
-                items={$store.persons}
-                add={store.addPerson}
-                remove={store.removePerson}
+                items={$data.persons}
+                add={data.addPerson}
+                remove={data.removePerson}
                 label="Add Participant"
                 itemName="Participant"
                 placeholder="Participant Name"
@@ -95,24 +144,30 @@
 
     <span class="message">{message}</span>
 
-    <div class="button-wrapper">
-        {#if step > 1}
+    <div class="button-wrapper" class:error={message}>
+        {#if $setupStep > 1 || $categorySet}
             <button class="btn-secondary" transition:fade|local on:click={showPrev}>Back</button>
         {/if}
-        <button class="btn-primary" on:click={handleNext}>Next</button>
+        {#if $category.replace(/\s/g, '') && $categorySet}
+            <button class="btn-primary" transition:fade|local on:click={handleNext}>Next</button>
+        {/if}
     </div>
 </PageWrapper>
 
+<!--
+
+    <PageWrapper>
+        <h1>
+        <p class="subtitle">
+        <div class="wrapper">
+        <span class="message">
+        <div class="buttons">    
+    </PageWrapper>
+
+-->
 <style lang="scss">
     p {
         font-size: 2rem;
-    }
-
-    .input-wrapper {
-        display: grid;
-        width: calc(100vw - 48px);
-        max-width: 400px;
-        margin: 1.2rem auto;
     }
 
     button {
@@ -135,5 +190,6 @@
 
     .message {
         font-size: 1.6rem;
+        color: red;
     }
 </style>

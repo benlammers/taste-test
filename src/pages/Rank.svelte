@@ -1,50 +1,34 @@
 <script lang="ts">
     import { flip } from 'svelte/animate';
+    import { Link } from 'svelte-navigator';
     import { dndzone } from 'svelte-dnd-action';
 
-    import type { ListItemType } from '../stores';
-    import { store } from '../stores';
+    import type { ListItemType } from '../stores/data';
+    import { data } from '../stores/data';
+    import { rankIndex } from '../stores/steps';
 
     import PageWrapper from '../components/PageWrapper.svelte';
 
     // ITERATE THROUGH RESULTS INSTEAD OF PEOPLE?
 
-    let currIndex = 0;
-    $: currPersonId = $store.persons[currIndex].id;
+    $: currPersonId = $data.persons[$rankIndex].id;
 
     function backParticipant(): void {
-        if (currIndex !== 0) {
-            currIndex -= 1;
+        if ($rankIndex !== 0) {
+            rankIndex.decrement();
         } else {
             console.error('Current index should not go below 0');
         }
     }
 
     function nextParticipant(): void {
-        if (currIndex <= $store.persons.length - 2) {
-            currIndex += 1;
-        } else {
-            // console.error('Current index should not go above length of participants');
-
-            // View Results
-            let scores = $store.samples
-                .map((sample) => {
-                    return {
-                        name: sample.name,
-                        score: $store.results
-                            .map((result) => result.rankings.indexOf(sample.id) + 1)
-                            .reduce((a, b) => a + b, 0),
-                    };
-                })
-                .sort((sampleA, sampleB) => sampleA.score - sampleB.score);
-            alert(scores.map((score, i) => `${i + 1}. ${score.name}\n`).join(' '));
-        }
+        rankIndex.increment();
     }
 
     const flipDurationMs: number = 300;
 
-    $: currRankings = $store.results.find((result) => result.person === currPersonId)?.rankings;
-    $: items = [...$store.samples.sort(sortBy(currRankings))];
+    $: currRankings = $data.results.find((result) => result.person === currPersonId)?.rankings;
+    $: items = [...$data.samples].sort(sortBy(currRankings));
 
     function sortBy(currRankings: number[] | undefined) {
         return function (sampleA: ListItemType, sampleB: ListItemType) {
@@ -65,7 +49,11 @@
 
     function handleDndFinalize(e: any): void {
         items = e.detail.items;
-        store.updateRanks({ person: currPersonId, rankings: items.map((item) => item.id) });
+        data.updateRanks({ person: currPersonId, rankings: items.map((item) => item.id) });
+    }
+
+    function getIndexOfSample(id: number): number {
+        return $data.samples.findIndex((sample) => sample.id === id) + 1;
     }
 
     // TODO: Is this accessible
@@ -75,10 +63,16 @@
 <PageWrapper>
     <h1>Input Rankings</h1>
 
-    {#each $store.persons as person (person.id)}
+    {#each $data.persons as person (person.id)}
         {#if currPersonId === person.id}
-            <div class="list">
-                <p>{person.name}</p>
+            <h2 class="subtitle">{person.name}</h2>
+            <div class="content-wrapper list">
+                <p>Rank</p>
+                <div class="ranks">
+                    {#each items as item, i}
+                        <div><span>{i + 1}<sup>{i === 0 ? 'st' : i > 1 ? 'th' : 'nd'}</sup></span></div>
+                    {/each}
+                </div>
                 <ul
                     use:dndzone={{ items, flipDurationMs, dropTargetStyle }}
                     on:consider={handleDndConsider}
@@ -86,61 +80,113 @@
                 >
                     {#each items as tasteItem (tasteItem.id)}
                         <li animate:flip={{ duration: flipDurationMs }}>
-                            {tasteItem.name}
+                            <div>
+                                {getIndexOfSample(tasteItem.id)}
+                            </div>
+                            <span>
+                                {tasteItem.name}
+                            </span>
                         </li>
                     {/each}
                 </ul>
+                <p>Green number is order in which samples were tasted</p>
             </div>
         {/if}
     {/each}
 
     <div class="button-wrapper">
-        {#if currPersonId !== $store.persons[0].id}
+        {#if $rankIndex === 0}
+            <Link class="btn-secondary" to="/perform">Back</Link>
+        {:else if currPersonId !== $data.persons[0].id}
             <button class="btn-secondary" on:click={backParticipant}>Back</button>
         {/if}
-        <button class="btn-primary" on:click={nextParticipant}>Next</button>
+
+        {#if $rankIndex === $data.persons.length - 1}
+            <Link to="/results" class="btn-primary">Continue</Link>
+        {:else}
+            <button class="btn-primary" on:click={nextParticipant}>Next</button>
+        {/if}
     </div>
 </PageWrapper>
 
 <style lang="scss">
     .list {
         display: grid;
+        grid-template-columns: max-content 1fr;
         width: calc(100vw - 48px);
         max-width: 400px;
         margin: 1.2rem auto;
+        column-gap: 1.2rem;
+        row-gap: 0.4rem;
+
+        p {
+            grid-column: 1 / 2;
+            font-size: 1.6rem;
+        }
+
+        p:last-child {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 2.4rem 1.2rem 1.2rem;
+        }
     }
 
-    p {
-        font-size: 1.6rem;
-    }
-
+    .ranks,
     ul {
         display: grid;
         align-content: start;
         row-gap: 1.2rem;
+        grid-row: 2 / 3;
+    }
 
-        padding: 1.2rem 0;
-        min-height: min(32rem, 40vh);
+    .ranks div,
+    li {
+        display: grid;
+        align-content: center;
+        box-shadow: var(--shadow-base);
+        font-size: 1.8rem;
+        border-radius: 4px;
+        background: #ffffff;
+    }
+
+    .ranks div {
+        height: 48px;
+        width: 48px;
     }
 
     li {
-        display: grid;
-        grid-template-columns: 1fr max-content;
+        grid-template-columns: 48px 1fr;
         align-items: center;
-        height: min-content;
-
         background: #ffffff;
         box-shadow: var(--shadow-base);
         font-size: 1.8rem;
         border-radius: 4px;
         overflow: hidden;
-        padding: 1.2rem;
+
+        span,
+        div {
+            padding: 1.2rem;
+        }
+
+        div {
+            background-color: var(--color-primary);
+            color: white;
+        }
     }
 
     .button-wrapper {
         display: grid;
-        grid-template-columns: max-content max-content;
-        justify-content: center;
-        column-gap: 2.4rem;
+        grid-template-columns: 1fr max-content;
+        width: 100%;
+
+        button,
+        a {
+            justify-self: start;
+        }
+
+        button:last-child,
+        a:last-child {
+            justify-self: end;
+        }
     }
 </style>

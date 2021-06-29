@@ -4,15 +4,18 @@
 </script>
 
 <PageWrapper>
-    <h1>Welcome to the Taste Test App</h1>
+    <h1>Welcome</h1>
     <p>Enjoy the sampling and we'll take care of the rest</p>
 
-    <Link to="/setup" class="btn-primary">Start Tasting!</Link>
+    <div class="content-wrapper">
+        <Link to="/setup" class="btn-primary">Start Tasting!</Link>
+    </div>
 </PageWrapper>
 
 <style lang="scss">
     :global(a) {
         justify-self: center;
+        align-self: end;
     }
 
     p {

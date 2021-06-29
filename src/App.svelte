@@ -1,8 +1,11 @@
 <script lang="ts">
     import { Router, Route } from 'svelte-navigator';
+    import Confirm from './pages/Confirm.svelte';
     import Home from './pages/Home.svelte';
-    import Setup from './pages/Setup.svelte';
+    import Perform from './pages/Perform.svelte';
     import Rank from './pages/Rank.svelte';
+    import Results from './pages/Results.svelte';
+    import Setup from './pages/Setup.svelte';
 </script>
 
 <main>
@@ -13,8 +16,17 @@
         <Route path="setup">
             <Setup />
         </Route>
+        <Route path="confirm">
+            <Confirm />
+        </Route>
         <Route path="rank">
             <Rank />
+        </Route>
+        <Route path="perform">
+            <Perform />
+        </Route>
+        <Route path="results">
+            <Results />
         </Route>
     </Router>
 </main>
@@ -28,7 +40,10 @@
 
     Step 4: Input Participants - Item List
 
-    Step 5: Overview and confirmation: button to input rankings/back button
+    Step 5: Overview and Confirmation
+        - Show list of samples
+        - Randomize list?
+        - button to input rankings/back button
 
     Steps 6 -> (# of participants + 6)
 

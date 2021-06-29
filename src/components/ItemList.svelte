@@ -9,7 +9,7 @@
     import { flip } from 'svelte/animate';
     import { fly } from 'svelte/transition';
 
-    import type { ListItemType } from '../stores';
+    import type { ListItemType } from '../stores/data';
 
     export let items: ListItemType[];
     export let label: string;
@@ -26,7 +26,7 @@
     const handleAddItem = (): void => {
         if (!newItem.replace(/\s/g, '')) {
             newItemError = `${itemName} must not be blank`;
-        } else if (items.filter((item) => item.name === newItem).length > 0) {
+        } else if (items.filter((item) => item.name.toLowerCase() === newItem.toLowerCase()).length > 0) {
             newItemError = `${itemName} already exists`;
         } else {
             add(newItem);
@@ -39,7 +39,7 @@
     };
 </script>
 
-<form on:submit|preventDefault={handleAddItem}>
+<form on:submit|preventDefault={handleAddItem} class:error={newItemError}>
     <label for={`new-item-${inputId}`}>{label}</label>
     <input
         type="text"
@@ -68,44 +68,12 @@
 </ul>
 
 <style lang="scss">
-    form {
-        font-size: 1.6rem;
-        width: 100%;
-        display: grid;
-        grid-template-columns: 1fr max-content;
-        align-items: center;
-        row-gap: 0.6rem;
-        column-gap: 1.2rem;
-        margin-bottom: 2.4rem;
-
-        label {
-            grid-column: 1 / -1;
-            justify-self: start;
-        }
-
-        button {
-            border: 1px solid var(--color-secondary);
-            background: var(--color-primary);
-            color: #fff;
-            height: 48px;
-            width: 48px;
-            border-radius: 4px;
-        }
-
-        span {
-            grid-column: 1 / -1;
-            color: red;
-            justify-self: start;
-        }
-    }
-
     ul {
         display: grid;
         align-content: start;
         row-gap: 1.2rem;
 
         padding: 1.2rem 0;
-        min-height: min(32rem, 40vh);
     }
 
     li {
@@ -119,6 +87,7 @@
         font-size: 1.8rem;
         border-radius: 4px;
         overflow: hidden;
+        text-transform: capitalize;
 
         button {
             padding: 1.2rem;

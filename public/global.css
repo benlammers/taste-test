@@ -38,6 +38,13 @@ h1 {
     font-weight: 100;
 }
 
+h2 {
+    color: var(--color-black);
+    text-transform: uppercase;
+    font-size: 3.6rem;
+    font-weight: 700;
+}
+
 @media only screen and (max-width: 576px) {
     h1 {
         font-size: 3.2rem;
@@ -90,3 +97,84 @@ input[type='text']::placeholder {
     color: var(--color-secondary);
 }
 */
+
+form {
+    font-size: 1.6rem;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr max-content;
+    align-items: center;
+    row-gap: 0.6rem;
+    column-gap: 1.2rem;
+    margin-bottom: 2.4rem;
+}
+
+form.error button,
+form.error input {
+    animation: shake 0.2s ease-in-out 0s 2;
+}
+
+form label {
+    grid-column: 1 / -1;
+    justify-self: start;
+}
+
+form button {
+    border: 1px solid var(--color-secondary);
+    background: var(--color-primary);
+    color: #fff;
+    height: 48px;
+    width: 48px;
+    border-radius: 4px;
+}
+
+form span {
+    grid-column: 1 / -1;
+    color: red;
+    justify-self: start;
+}
+
+@keyframes shake {
+    0% {
+        transform: translateX(0px);
+    }
+    25% {
+        transform: translateX(-10px);
+    }
+    75% {
+        transform: translateX(10px);
+    }
+    100% {
+        transform: translateX(0px);
+    }
+}
+
+.subtitle {
+    grid-row: 2 / 3;
+    grid-column: 1 / 2;
+}
+
+.content-wrapper {
+    grid-row: 3 / 4;
+    grid-column: 1 / 2;
+
+    display: grid;
+    align-content: start;
+    width: calc(100vw - 48px);
+    max-width: 400px;
+    margin: 1.2rem auto;
+}
+
+.message {
+    grid-row: 4 / 5;
+    grid-column: 1 / 2;
+}
+
+.button-wrapper {
+    grid-row: -2 / -1;
+    grid-column: 1 / 2;
+}
+
+.button-wrapper.error {
+    animation: shake 0.2s ease-in-out 0s 2;
+}
