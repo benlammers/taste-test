@@ -66,7 +66,7 @@
     {#each $data.persons as person (person.id)}
         {#if currPersonId === person.id}
             <h2 class="subtitle">{person.name}</h2>
-            <div class="content-wrapper list">
+            <div class="content-wrapper ranked-list">
                 <p>Rank</p>
                 <div class="ranks">
                     {#each items as item, i}
@@ -108,85 +108,3 @@
         {/if}
     </div>
 </PageWrapper>
-
-<style lang="scss">
-    .list {
-        display: grid;
-        grid-template-columns: max-content 1fr;
-        width: calc(100vw - 48px);
-        max-width: 400px;
-        margin: 1.2rem auto;
-        column-gap: 1.2rem;
-        row-gap: 0.4rem;
-
-        p {
-            grid-column: 1 / 2;
-            font-size: 1.6rem;
-        }
-
-        p:last-child {
-            grid-column: 1 / -1;
-            text-align: center;
-            padding: 2.4rem 1.2rem 1.2rem;
-        }
-    }
-
-    .ranks,
-    ul {
-        display: grid;
-        align-content: start;
-        row-gap: 1.2rem;
-        grid-row: 2 / 3;
-    }
-
-    .ranks div,
-    li {
-        display: grid;
-        align-content: center;
-        box-shadow: var(--shadow-base);
-        font-size: 1.8rem;
-        border-radius: 4px;
-        background: #ffffff;
-    }
-
-    .ranks div {
-        height: 48px;
-        width: 48px;
-    }
-
-    li {
-        grid-template-columns: 48px 1fr;
-        align-items: center;
-        background: #ffffff;
-        box-shadow: var(--shadow-base);
-        font-size: 1.8rem;
-        border-radius: 4px;
-        overflow: hidden;
-
-        span,
-        div {
-            padding: 1.2rem;
-        }
-
-        div {
-            background-color: var(--color-primary);
-            color: white;
-        }
-    }
-
-    .button-wrapper {
-        display: grid;
-        grid-template-columns: 1fr max-content;
-        width: 100%;
-
-        button,
-        a {
-            justify-self: start;
-        }
-
-        button:last-child,
-        a:last-child {
-            justify-self: end;
-        }
-    }
-</style>

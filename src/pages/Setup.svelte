@@ -81,13 +81,30 @@
 
     {#if $setupStep === 1 && !transitioning}
         {#if !$categorySet}
-            <p class="subtitle" transition:fade|local>What category of samples will be tasted today</p>
+            <p
+                class="subtitle-wrapper text--md"
+                in:fade|local={{ duration: 300, delay: 300 }}
+                out:fade|local={{ duration: 300 }}
+            >
+                What category of samples will be tasted today
+            </p>
         {:else}
-            <p class="subtitle" transition:fade|local>Today we will be sampling</p>
+            <p
+                class="subtitle-wrapper text--md"
+                in:fade|local={{ duration: 300, delay: 300 }}
+                out:fade|local={{ duration: 300 }}
+            >
+                Today we will be sampling
+            </p>
         {/if}
         <div class="content-wrapper" transition:fly|local={{ x: -300 }} on:outroend={onTransitionEnd}>
             {#if !$categorySet}
-                <form on:submit|preventDefault={handleSampleType} class:error={sampleTypeError}>
+                <form
+                    on:submit|preventDefault={handleSampleType}
+                    class:error={sampleTypeError}
+                    in:fade|local={{ duration: 300, delay: 300 }}
+                    out:fade|local={{ duration: 300 }}
+                >
                     <label for="sample-type">Category of Samples</label>
                     <input
                         type="text"
@@ -104,11 +121,11 @@
                     {/if}
                 </form>
             {:else}
-                <h2>{$category}</h2>
+                <h2 in:fade|local={{ duration: 300, delay: 300 }} out:fade|local={{ duration: 300 }}>{$category}</h2>
             {/if}
         </div>
     {:else if $setupStep === 2 && !transitioning}
-        <p class="subtitle" transition:fade|local>
+        <p class="subtitle-wrapper text--md" transition:fade|local>
             Add the types of {$category} you will be sampling<br /><strong
                 >in the order you will be tasting them in</strong
             >
@@ -129,7 +146,7 @@
             />
         </div>
     {:else if $setupStep === 3 && !transitioning}
-        <p class="subtitle" transition:fade|local>Add the participants of today's taste test</p>
+        <p class="subtitle-wrapper text--md" transition:fade|local>Add the participants of today's taste test</p>
         <div class="content-wrapper" transition:fly|local={{ x: 300 }} on:outroend={onTransitionEnd}>
             <ItemList
                 items={$data.persons}
@@ -142,7 +159,7 @@
         </div>
     {/if}
 
-    <span class="message">{message}</span>
+    <span class="message-wrapper">{message}</span>
 
     <div class="button-wrapper" class:error={message}>
         {#if $setupStep > 1 || $categorySet}
@@ -153,43 +170,3 @@
         {/if}
     </div>
 </PageWrapper>
-
-<!--
-
-    <PageWrapper>
-        <h1>
-        <p class="subtitle">
-        <div class="wrapper">
-        <span class="message">
-        <div class="buttons">    
-    </PageWrapper>
-
--->
-<style lang="scss">
-    p {
-        font-size: 2rem;
-    }
-
-    button {
-        justify-self: center;
-    }
-
-    .button-wrapper {
-        display: grid;
-        grid-template-columns: 1fr max-content;
-        width: 100%;
-
-        button {
-            justify-self: start;
-        }
-
-        button:last-child {
-            justify-self: end;
-        }
-    }
-
-    .message {
-        font-size: 1.6rem;
-        color: red;
-    }
-</style>

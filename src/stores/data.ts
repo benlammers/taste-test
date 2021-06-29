@@ -16,34 +16,34 @@ export const data = (() => {
         persons: ListItemType[];
         results: ResultItemType[];
     }>({
-        // samples: [
-        //     { name: 'apple', id: 1 },
-        //     { name: 'banana', id: 2 },
-        //     { name: 'cantelope', id: 3 },
-        //     { name: 'mango', id: 4 },
-        // ],
-        // persons: [
-        //     { name: 'Ben', id: 1 },
-        //     { name: 'Mad', id: 2 },
-        //     { name: 'George', id: 3 },
-        // ],
-        // results: [
-        //     {
-        //         person: 1,
-        //         rankings: [1, 2, 3, 4],
-        //     },
-        //     {
-        //         person: 2,
-        //         rankings: [1, 2, 3, 4],
-        //     },
-        //     {
-        //         person: 3,
-        //         rankings: [1, 2, 3, 4],
-        //     },
-        // ],
-        samples: [],
-        persons: [],
-        results: [],
+        samples: [
+            { name: 'guoda', id: 1 },
+            { name: 'cheddar', id: 2 },
+            { name: 'mozerella', id: 3 },
+            { name: 'parmesan', id: 4 },
+        ],
+        persons: [
+            { name: 'Ben', id: 1 },
+            { name: 'Mad', id: 2 },
+            { name: 'George', id: 3 },
+        ],
+        results: [
+            {
+                person: 1,
+                rankings: [1, 2, 3, 4],
+            },
+            {
+                person: 2,
+                rankings: [1, 2, 3, 4],
+            },
+            {
+                person: 3,
+                rankings: [1, 2, 3, 4],
+            },
+        ],
+        // samples: [],
+        // persons: [],
+        // results: [],
     });
 
     const addSample = (newSample: string): void => {

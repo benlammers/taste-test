@@ -1,0 +1,19 @@
+.font {
+    &--bold {
+        font-weight: var(--weight-bold);
+    }
+
+    &--thin {
+        font-weight: var(--weight-thin);
+    }
+}
+
+.color {
+    &--primary {
+        color: var(--color-primary);
+    }
+
+    &--secondary {
+        color: var(--color-secondary);
+    }
+}

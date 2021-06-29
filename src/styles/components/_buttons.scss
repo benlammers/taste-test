@@ -1,0 +1,48 @@
+button {
+    cursor: pointer;
+}
+
+a.btn-primary,
+a.btn-secondary,
+.btn-primary,
+.btn-secondary {
+    display: grid;
+    align-items: center;
+
+    padding: 1.2rem 1.6rem;
+    font-size: var(--text-md);
+    border-radius: var(--border-radius);
+
+    text-decoration: none;
+    color: var(--color-text);
+}
+
+.btn-primary {
+    background: var(--color-primary);
+    border: 1px solid var(--color-secondary);
+}
+
+.btn-secondary {
+    background: var(--color-secondary);
+    border: 1px solid var(--color-primary);
+}
+
+.button-wrapper {
+    display: grid;
+    grid-template-columns: 1fr max-content;
+    width: 100%;
+
+    button,
+    a {
+        justify-self: start;
+    }
+
+    button:last-child,
+    a:last-child {
+        justify-self: end;
+    }
+}
+
+.button-wrapper.error {
+    animation: shake 0.2s ease-in-out 0s 2;
+}

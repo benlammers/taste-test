@@ -26,14 +26,3 @@
         <Link to="/rank" class="btn-primary">Input Results</Link>
     </div>
 </PageWrapper>
-
-<style lang="scss">
-    :global(a) {
-        justify-self: center;
-        align-self: end;
-    }
-
-    p {
-        font-size: 1.6rem;
-    }
-</style>

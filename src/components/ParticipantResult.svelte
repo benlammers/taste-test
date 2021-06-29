@@ -17,6 +17,3 @@
         <li>{getSampleName(ranking)}</li>
     {/each}
 </ol>
-
-<style lang="scss">
-</style>

@@ -66,37 +66,3 @@
         </li>
     {/each}
 </ul>
-
-<style lang="scss">
-    ul {
-        display: grid;
-        align-content: start;
-        row-gap: 1.2rem;
-
-        padding: 1.2rem 0;
-    }
-
-    li {
-        display: grid;
-        grid-template-columns: 1fr max-content;
-        align-items: center;
-        height: min-content;
-
-        background: #ffffff;
-        box-shadow: var(--shadow-base);
-        font-size: 1.8rem;
-        border-radius: 4px;
-        overflow: hidden;
-        text-transform: capitalize;
-
-        button {
-            padding: 1.2rem;
-            background: #c70000;
-            font-size: 2.8rem;
-            border: none;
-            display: grid;
-            align-items: center;
-            color: white;
-        }
-    }
-</style>
