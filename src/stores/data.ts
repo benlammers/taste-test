@@ -6,60 +6,22 @@ export interface ListItemType {
 }
 
 export interface ResultItemType {
-    person: number;
+    participant: number;
     rankings: number[];
 }
-
-export const test = true;
 
 export const data = (() => {
     const { subscribe, set, update } = writable<{
         samples: ListItemType[];
-        persons: ListItemType[];
+        participants: ListItemType[];
         results: ResultItemType[];
         isAlphanumerical: boolean;
-    }>(
-        test
-            ? {
-                  samples: [
-                      { name: 'guoda', id: 1 },
-                      { name: 'cheddar', id: 2 },
-                      { name: 'mozerella', id: 3 },
-                      { name: 'parmesan', id: 4 },
-                  ],
-                  persons: [
-                      { name: 'Ben', id: 1 },
-                      { name: 'Mad', id: 2 },
-                      { name: 'George', id: 3 },
-                      { name: 'Billy', id: 4 },
-                  ],
-                  results: [
-                      {
-                          person: 1,
-                          rankings: [1, 2, 3, 4],
-                      },
-                      {
-                          person: 2,
-                          rankings: [1, 2, 3, 4],
-                      },
-                      {
-                          person: 3,
-                          rankings: [4, 3, 2, 1],
-                      },
-                      {
-                          person: 4,
-                          rankings: [4, 3, 2, 1],
-                      },
-                  ],
-                  isAlphanumerical: true,
-              }
-            : {
-                  samples: [],
-                  persons: [],
-                  results: [],
-                  isAlphanumerical: true,
-              }
-    );
+    }>({
+        samples: [],
+        participants: [],
+        results: [],
+        isAlphanumerical: true,
+    });
 
     const addSample = (newSample: string): void => {
         update(({ samples, results, ...store }) => {
@@ -99,38 +61,38 @@ export const data = (() => {
         });
     };
 
-    const addPerson = (newPerson: string): void => {
-        update(({ persons, results, samples, ...store }) => {
-            let newPersonId: number;
+    const addParticipant = (newParticipant: string): void => {
+        update(({ participants, results, samples, ...store }) => {
+            let newParticipantId: number;
 
-            if (persons.length > 0) {
-                newPersonId = persons[persons.length - 1].id + 1;
+            if (participants.length > 0) {
+                newParticipantId = participants[participants.length - 1].id + 1;
             } else {
-                newPersonId = 1;
+                newParticipantId = 1;
             }
 
             return {
                 ...store,
                 samples,
-                persons: [...persons, { name: newPerson, id: newPersonId }],
-                results: [...results, { person: newPersonId, rankings: samples.map((sample) => sample.id) }],
+                participants: [...participants, { name: newParticipant, id: newParticipantId }],
+                results: [...results, { participant: newParticipantId, rankings: samples.map((sample) => sample.id) }],
             };
         });
     };
 
-    const removePerson = (personId: number): void => {
-        update(({ persons, results, ...store }) => {
+    const removeParticipant = (participantId: number): void => {
+        update(({ participants, results, ...store }) => {
             return {
                 ...store,
-                persons: persons.filter((person) => person.id !== personId),
-                results: results.filter((result) => result.person !== personId),
+                participants: participants.filter((participant) => participant.id !== participantId),
+                results: results.filter((result) => result.participant !== participantId),
             };
         });
     };
 
     const updateRanks = (newResult: ResultItemType): void => {
         update(({ results, ...store }) => {
-            let resultIndex = results.findIndex((result) => result.person === newResult.person);
+            let resultIndex = results.findIndex((result) => result.participant === newResult.participant);
             let newResults = [...results];
             newResults[resultIndex] = newResult;
 
@@ -140,26 +102,15 @@ export const data = (() => {
             };
         });
     };
-
-    // const toggleAlphanumerical = (): void => {
-    //     update(({ isAlphanumerical, ...store }) => {
-    //         return {
-    //             ...store,
-    //             isAlphanumerical: !isAlphanumerical,
-    //         };
-    //     });
-    // };
-
     return {
         subscribe,
         set,
         update,
         addSample,
         removeSample,
-        addPerson,
-        removePerson,
+        addParticipant,
+        removeParticipant,
         updateRanks,
-        // toggleAlphanumerical,
     };
 })();
 

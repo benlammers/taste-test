@@ -30,9 +30,9 @@ li div:first-child {
 
 li div:last-child {
     height: 100%;
-    padding-right: 0.8rem;
     display: grid;
     align-items: center;
+    padding-right: 0.8rem;
     font-weight: var(--weight-thick);
 }
 
@@ -40,7 +40,6 @@ li span {
     grid-column: 2 / 3;
 }
 
-/* List Item Trash Button */
 li button {
     grid-column: 3 / 4;
     height: 100%;

@@ -11,10 +11,3 @@
         <Link to="/setup" class="btn-primary center">Start Tasting!</Link>
     </div>
 </PageWrapper>
-
-<style lang="scss">
-    // .button-wrapper {
-    //     display: flex;
-    //     justify-content: center;
-    // }
-</style>

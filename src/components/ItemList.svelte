@@ -23,7 +23,7 @@
 
     let newItem: string = '';
     let newItemError: string = '';
-    let inputId = numOfLists++;
+    let inputId: number = numOfLists++;
 
     const handleAddItem = (): void => {
         newItemError = '';

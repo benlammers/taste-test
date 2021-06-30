@@ -24,10 +24,10 @@
         </ol>
         <h3>Participants</h3>
         <ol>
-            {#each $data.persons as person, i}
+            {#each $data.participants as participant, i}
                 <li>
                     <div>{i + 1}</div>
-                    <span>{person.name}</span>
+                    <span>{participant.name}</span>
                 </li>
             {/each}
         </ol>

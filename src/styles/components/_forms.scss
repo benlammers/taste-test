@@ -21,19 +21,19 @@ form label {
 }
 
 form button {
-    background: var(--color-primary);
-    color: var(--color-white);
     height: 4.8rem;
     width: 4.8rem;
-    border-radius: 4px;
     box-shadow: var(--shadow-base);
+    color: var(--color-white);
+    background: var(--color-primary);
     border: none;
+    border-radius: 4px;
 }
 
 form span {
+    justify-self: start;
     grid-column: 1 / -1;
     color: var(--color-red);
-    justify-self: start;
     font-size: var(--text-sm);
 }
 
@@ -49,9 +49,3 @@ input[type='text'] {
 input[type='text']:focus {
     border: 1px solid var(--color-black);
 }
-
-/* 
-input[type='text']::placeholder {
-    color: var(--color-secondary);
-}
-*/

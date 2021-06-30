@@ -15,12 +15,12 @@
 
     const navigate = useNavigate();
 
-    let message = '';
+    let message: string = '';
 
     let prevStep: number;
-    let transitioning = false;
+    let transitioning: boolean = false;
 
-    let sampleTypeError = '';
+    let sampleTypeError: string = '';
 
     onMount(() => {
         prevStep = $setupStep === 1 ? 2 : $setupStep - 1;
@@ -35,14 +35,14 @@
             if ($data.samples.length < 2) {
                 message = 'Must have at least 2 samples';
             } else showNext();
-        } else if ($data.persons.length < 2) {
+        } else if ($data.participants.length < 2) {
             message = 'Must have at least 2 participants';
         } else {
             navigate('/confirm');
         }
     };
 
-    const handleSampleType = () => {
+    const handleSampleType = (): void => {
         sampleTypeError = '';
         if (!$category.replace(/\s/g, '')) {
             sampleTypeError = 'Sample Category must not be blank';
@@ -51,19 +51,19 @@
         }
     };
 
-    const showNext = () => {
+    const showNext = (): void => {
         prevStep = $setupStep;
         setupStep.increment();
         transitioning = true;
     };
 
-    const showPrev = () => {
+    const showPrev = (): void => {
         prevStep = $setupStep;
         setupStep.decrement();
         transitioning = true;
     };
 
-    const onTransitionEnd = () => {
+    const onTransitionEnd = (): void => {
         transitioning = false;
     };
 
@@ -134,9 +134,9 @@
         <p class="subtitle-wrapper text--sm" transition:fade|local>Add today's participants</p>
         <div class="content-wrapper" transition:fly|local={{ x: 300 }} on:outroend={onTransitionEnd}>
             <ItemList
-                items={$data.persons}
-                add={data.addPerson}
-                remove={data.removePerson}
+                items={$data.participants}
+                add={data.addParticipant}
+                remove={data.removeParticipant}
                 label="Add Participant"
                 itemName="Participant"
                 placeholder="Participant Name"

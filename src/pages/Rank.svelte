@@ -16,33 +16,33 @@
     if ($data.samples.length === 0) navigate('/');
 
     let prevIndex: number;
-    $: currPersonId = $data.persons[$rankIndex]?.id;
+    $: currParticipantId = $data.participants[$rankIndex]?.id;
 
     onMount(() => {
         prevIndex = $rankIndex === 1 ? 2 : $rankIndex;
     });
 
-    function backParticipant(): void {
+    const backParticipant = (): void => {
         if ($rankIndex !== 0) {
             prevIndex = $rankIndex;
             rankIndex.decrement();
         } else {
             console.error('Current index should not go below 0');
         }
-    }
+    };
 
-    function nextParticipant(): void {
+    const nextParticipant = (): void => {
         prevIndex = $rankIndex;
         rankIndex.increment();
-    }
+    };
 
     const flipDurationMs: number = 300;
 
-    $: currRankings = $data.results.find((result) => result.person === currPersonId)?.rankings;
+    $: currRankings = $data.results.find((result) => result.participant === currParticipantId)?.rankings;
     $: items = [...$data.samples].sort(sortBy(currRankings));
 
-    function sortBy(currRankings: number[] | undefined) {
-        return function (sampleA: ListItemType, sampleB: ListItemType) {
+    const sortBy = (currRankings: number[] | undefined) => {
+        return (sampleA: ListItemType, sampleB: ListItemType) => {
             if (currRankings === undefined) {
                 throw new TypeError('Could not find player rankings');
             }
@@ -52,20 +52,18 @@
 
             return indexA - indexB;
         };
-    }
+    };
 
-    function handleDndConsider(e: any): void {
+    const handleDndConsider = (e: any): void => {
         items = e.detail.items;
-    }
+    };
 
-    function handleDndFinalize(e: any): void {
+    const handleDndFinalize = (e: any): void => {
         items = e.detail.items;
-        data.updateRanks({ person: currPersonId, rankings: items.map((item) => item.id) });
-    }
+        data.updateRanks({ participant: currParticipantId, rankings: items.map((item) => item.id) });
+    };
 
-    let dropTargetStyle = { outline: 'none' };
-
-    let transitioning = false;
+    let transitioning: boolean = false;
 
     const onTransitionEnd = () => {
         transitioning = false;
@@ -85,9 +83,9 @@
 <PageWrapper>
     <h1>Input Rankings</h1>
 
-    {#each $data.persons as person, i (person.id)}
-        {#if currPersonId === person.id}
-            <h2 class="subtitle-wrapper" transition:fade|local>{person.name}</h2>
+    {#each $data.participants as participant, i (participant.id)}
+        {#if currParticipantId === participant.id}
+            <h2 class="subtitle-wrapper" transition:fade|local>{participant.name}</h2>
             <div
                 class="content-wrapper"
                 in:fly|local={{ x: getInX(), delay: 300 }}
@@ -102,7 +100,7 @@
                         {/each}
                     </div>
                     <ol
-                        use:dndzone={{ items, flipDurationMs, dropTargetStyle }}
+                        use:dndzone={{ items, flipDurationMs, dropTargetStyle: { outline: 'none' } }}
                         on:consider={handleDndConsider}
                         on:finalize={handleDndFinalize}
                     >
@@ -132,11 +130,11 @@
     <div class="button-wrapper">
         {#if $rankIndex === 0}
             <Link class="btn-secondary back" to="/perform">Back</Link>
-        {:else if currPersonId !== $data.persons[0].id}
+        {:else if currParticipantId !== $data.participants[0].id}
             <button class="btn-secondary back" on:click={backParticipant}>Back</button>
         {/if}
 
-        {#if $rankIndex === $data.persons.length - 1}
+        {#if $rankIndex === $data.participants.length - 1}
             <Link to="/results" class="btn-primary next">Continue</Link>
         {:else}
             <button class="btn-primary next" on:click={nextParticipant}>Next</button>

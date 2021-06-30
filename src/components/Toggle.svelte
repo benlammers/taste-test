@@ -1,5 +1,5 @@
-<script>
-    export let checked = false;
+<script lang="ts">
+    export let checked: boolean = false;
 </script>
 
 <label class="switch">

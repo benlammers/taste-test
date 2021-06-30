@@ -1,3 +1,3 @@
 - go over font sizes
 
-- clean up and go over variable names ie. participants vs persons
+- clean up and go over variable names ie. participants vs participants

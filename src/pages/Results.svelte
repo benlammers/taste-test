@@ -19,9 +19,9 @@
         lasts: number;
     }
 
-    let viewResults = false;
+    let viewResults: boolean = false;
 
-    let results = $data.samples.map<SampleResult>((sample) => {
+    let results: SampleResult[] = $data.samples.map<SampleResult>((sample) => {
         return {
             name: sample.name,
             id: sample.id,
@@ -71,7 +71,7 @@
         };
     };
 
-    let overall = [...results].sort((sampleA, sampleB) => {
+    let overall: SampleResult[] = [...results].sort((sampleA, sampleB) => {
         let diff = sortByScore(sampleA, sampleB);
         if (diff === 0) {
             diff = sortByFirsts(sampleA, sampleB);
