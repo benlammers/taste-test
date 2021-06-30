@@ -11,6 +11,7 @@
 
     import ItemList from '../components/ItemList.svelte';
     import PageWrapper from '../components/PageWrapper.svelte';
+    import Toggle from '../components/Toggle.svelte';
 
     const navigate = useNavigate();
 
@@ -105,9 +106,9 @@
             <h2>{$category}</h2>
         </div>
     {:else if $setupStep === 3 && !transitioning}
-        <p class="subtitle-wrapper text--md" transition:fade|local>
-            Add the types of {$category.toLowerCase()}<br />
-            <span class="text--sm font--bold"> in the order they will be sampled in </span>
+        <p class="subtitle-wrapper text--sm" transition:fade|local>
+            Add types of {$category.toLowerCase()}
+            <span class="text--sm font--bold">in the order they will be sampled in</span>
         </p>
         <div
             class="content-wrapper"
@@ -122,7 +123,12 @@
                 label={`Add type of ${$category}`}
                 itemName={$category}
                 placeholder={`Type of ${$category}`}
+                isAlphanumerical={$data.isAlphanumerical}
             />
+            <div class="toggle-wrapper">
+                <p class="text--sm">Use letters for ordering</p>
+                <Toggle bind:checked={$data.isAlphanumerical} />
+            </div>
         </div>
     {:else if $setupStep === 4 && !transitioning}
         <p class="subtitle-wrapper text--sm" transition:fade|local>Add today's participants</p>
@@ -142,8 +148,25 @@
 
     <div class="button-wrapper" class:error={message}>
         {#if $setupStep > 1}
-            <button class="btn-secondary" transition:fade|local on:click={showPrev}>Back</button>
-            <button class="btn-primary" transition:fade|local on:click={handleNext}>Next</button>
+            <button class="btn-secondary back" transition:fade|local on:click={showPrev}>Back</button>
+            <button class="btn-primary next" transition:fade|local on:click={handleNext}
+                >{$setupStep < 4 ? 'Next' : 'Continue'}</button
+            >
         {/if}
     </div>
 </PageWrapper>
+
+<style lang="scss">
+    .content-wrapper {
+        grid-template-rows: max-content 1fr max-content;
+    }
+
+    .toggle-wrapper {
+        align-self: end;
+        display: grid;
+        grid-template-columns: max-content max-content;
+        align-items: center;
+        justify-content: center;
+        column-gap: 2.4rem;
+    }
+</style>

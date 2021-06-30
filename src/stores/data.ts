@@ -1,4 +1,4 @@
-import { writable } from 'svelte/store';
+import { get, writable } from 'svelte/store';
 
 export interface ListItemType {
     name: string;
@@ -17,6 +17,7 @@ export const data = (() => {
         samples: ListItemType[];
         persons: ListItemType[];
         results: ResultItemType[];
+        isAlphanumerical: boolean;
     }>(
         test
             ? {
@@ -50,16 +51,18 @@ export const data = (() => {
                           rankings: [4, 3, 2, 1],
                       },
                   ],
+                  isAlphanumerical: true,
               }
             : {
                   samples: [],
                   persons: [],
                   results: [],
+                  isAlphanumerical: true,
               }
     );
 
     const addSample = (newSample: string): void => {
-        update(({ samples, persons, results }) => {
+        update(({ samples, results, ...store }) => {
             let newSampleId: number;
 
             if (samples.length > 0) {
@@ -69,8 +72,8 @@ export const data = (() => {
             }
 
             return {
+                ...store,
                 samples: [...samples, { name: newSample, id: newSampleId }],
-                persons,
                 results: results.map((result) => {
                     return {
                         ...result,
@@ -82,10 +85,10 @@ export const data = (() => {
     };
 
     const removeSample = (sampleId: number): void => {
-        update(({ samples, persons, results }) => {
+        update(({ samples, results, ...store }) => {
             return {
+                ...store,
                 samples: samples.filter((sample) => sample.id !== sampleId),
-                persons,
                 results: results.map((result) => {
                     return {
                         ...result,
@@ -97,7 +100,7 @@ export const data = (() => {
     };
 
     const addPerson = (newPerson: string): void => {
-        update(({ samples, persons, results }) => {
+        update(({ persons, results, samples, ...store }) => {
             let newPersonId: number;
 
             if (persons.length > 0) {
@@ -107,6 +110,7 @@ export const data = (() => {
             }
 
             return {
+                ...store,
                 samples,
                 persons: [...persons, { name: newPerson, id: newPersonId }],
                 results: [...results, { person: newPersonId, rankings: samples.map((sample) => sample.id) }],
@@ -115,9 +119,9 @@ export const data = (() => {
     };
 
     const removePerson = (personId: number): void => {
-        update(({ samples, persons, results }) => {
+        update(({ persons, results, ...store }) => {
             return {
-                samples,
+                ...store,
                 persons: persons.filter((person) => person.id !== personId),
                 results: results.filter((result) => result.person !== personId),
             };
@@ -125,18 +129,26 @@ export const data = (() => {
     };
 
     const updateRanks = (newResult: ResultItemType): void => {
-        update(({ samples, persons, results }) => {
+        update(({ results, ...store }) => {
             let resultIndex = results.findIndex((result) => result.person === newResult.person);
             let newResults = [...results];
             newResults[resultIndex] = newResult;
 
             return {
-                samples,
-                persons,
+                ...store,
                 results: newResults,
             };
         });
     };
+
+    // const toggleAlphanumerical = (): void => {
+    //     update(({ isAlphanumerical, ...store }) => {
+    //         return {
+    //             ...store,
+    //             isAlphanumerical: !isAlphanumerical,
+    //         };
+    //     });
+    // };
 
     return {
         subscribe,
@@ -147,5 +159,13 @@ export const data = (() => {
         addPerson,
         removePerson,
         updateRanks,
+        // toggleAlphanumerical,
     };
 })();
+
+export const getOrderBySampleId = (id: number): number | string => {
+    let { isAlphanumerical, samples } = get(data);
+    let index = samples.findIndex((sample) => sample.id === id);
+
+    return isAlphanumerical ? String.fromCharCode(97 + index) : index + 1;
+};

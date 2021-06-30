@@ -17,7 +17,7 @@
         <ol>
             {#each $data.samples as sample, i}
                 <li>
-                    <div>{i + 1}</div>
+                    <div>{$data.isAlphanumerical ? String.fromCharCode(97 + i) : i + 1}</div>
                     <span>{sample.name}</span>
                 </li>
             {/each}
@@ -33,8 +33,8 @@
         </ol>
     </div>
     <div class="button-wrapper">
-        <Link to="/setup" class="btn-secondary">Back</Link>
-        <Link to="/perform" class="btn-primary">Confirm</Link>
+        <Link to="/setup" class="btn-secondary back">Back</Link>
+        <Link to="/perform" class="btn-primary next">Confirm</Link>
     </div>
 </PageWrapper>
 

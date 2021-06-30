@@ -13,10 +13,9 @@
     --text-button: 2rem;
 
     @media only screen and (max-width: 576px) {
-        --text-xs: 1.2rem;
-        --text-sm: 1.6rem;
-        --text-md: 2.4rem;
         --text-lg: 2.8rem;
         --text-xl: 3.6rem;
+
+        --text-button: 1.8rem;
     }
 }

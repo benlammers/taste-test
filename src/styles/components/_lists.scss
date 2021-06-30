@@ -30,9 +30,10 @@ li div:first-child {
 
 li div:last-child {
     height: 100%;
-    padding-right: 0.4rem;
+    padding-right: 0.8rem;
     display: grid;
     align-items: center;
+    font-weight: var(--weight-thick);
 }
 
 li span {

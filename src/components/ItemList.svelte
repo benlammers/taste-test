@@ -16,6 +16,7 @@
     export let label: string;
     export let itemName: string;
     export let placeholder: string;
+    export let isAlphanumerical: boolean = false;
 
     export let add: (name: string) => void;
     export let remove: (id: number) => void;
@@ -25,10 +26,11 @@
     let inputId = numOfLists++;
 
     const handleAddItem = (): void => {
+        newItemError = '';
         if (!newItem.replace(/\s/g, '')) {
             newItemError = `${capitalize(itemName)} must not be blank`;
         } else if (items.filter((item) => item.name.toLowerCase() === newItem.toLowerCase()).length > 0) {
-            newItemError = `${capitalize(itemName)} already exists`;
+            newItemError = `${capitalize(newItem)} is already added`;
         } else {
             add(newItem.toLowerCase());
             newItem = '';
@@ -60,7 +62,7 @@
 <ol>
     {#each items as item, i (item.id)}
         <li out:fly|local={{ x: 10 }} in:fly|local={{ y: 50 }} animate:flip>
-            <div>{i + 1}</div>
+            <div>{isAlphanumerical ? String.fromCharCode(97 + i) : i + 1}</div>
             <span>{item.name}</span>
             <button on:click|once={() => removeItem(item.id)}>
                 <TrashCan24 />

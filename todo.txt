@@ -1,7 +1,3 @@
-- fix button styles (anchor tags different)
-- finalize spacing in content-wrapper
-- animate results?
 - go over font sizes
-
 
 - clean up and go over variable names ie. participants vs persons

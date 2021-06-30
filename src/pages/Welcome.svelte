@@ -5,16 +5,16 @@
 
 <PageWrapper>
     <h1>Welcome</h1>
-    <p class="subtitle-wrapper text--md">Enjoy the sampling and we'll take care of the rest</p>
+    <p class="subtitle-wrapper text--md">Enjoy the tasting and we'll take care of the rest</p>
 
     <div class="button-wrapper">
-        <Link to="/setup" class="btn-primary">Start Tasting!</Link>
+        <Link to="/setup" class="btn-primary center">Start Tasting!</Link>
     </div>
 </PageWrapper>
 
 <style lang="scss">
-    .button-wrapper {
-        display: flex;
-        justify-content: center;
-    }
+    // .button-wrapper {
+    //     display: flex;
+    //     justify-content: center;
+    // }
 </style>

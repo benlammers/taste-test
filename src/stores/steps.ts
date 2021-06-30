@@ -10,5 +10,5 @@ export const createCount = (init: number) => {
     };
 };
 
-export const setupStep = createCount(1);
+export const setupStep = createCount(3);
 export const rankIndex = createCount(0);

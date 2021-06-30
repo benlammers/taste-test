@@ -8,7 +8,7 @@
     import Draggable24 from 'carbon-icons-svelte/lib/Draggable24';
 
     import type { ListItemType } from '../stores/data';
-    import { data } from '../stores/data';
+    import { data, getOrderBySampleId } from '../stores/data';
     import { rankIndex } from '../stores/steps';
 
     import PageWrapper from '../components/PageWrapper.svelte';
@@ -63,10 +63,6 @@
         data.updateRanks({ person: currPersonId, rankings: items.map((item) => item.id) });
     }
 
-    function getIndexOfSample(id: number): number {
-        return $data.samples.findIndex((sample) => sample.id === id) + 1;
-    }
-
     let dropTargetStyle = { outline: 'none' };
 
     let transitioning = false;
@@ -113,7 +109,7 @@
                         {#each items as tasteItem (tasteItem.id)}
                             <li animate:flip={{ duration: flipDurationMs }}>
                                 <div>
-                                    {getIndexOfSample(tasteItem.id)}
+                                    {getOrderBySampleId(tasteItem.id)}
                                 </div>
                                 <span>
                                     {tasteItem.name}
@@ -126,28 +122,24 @@
                     </ol>
                 </div>
                 <p class="text--xs">Drag and drop items to reorder</p>
-                <p class="text--sm">Green number is order in which samples were tasted</p>
+                <p class="text--sm">
+                    Green {$data.isAlphanumerical ? 'letter' : 'number'} is order in which samples were tasted
+                </p>
             </div>
         {/if}
     {/each}
 
     <div class="button-wrapper">
         {#if $rankIndex === 0}
-            <Link class="btn-secondary" to="/perform">Back</Link>
+            <Link class="btn-secondary back" to="/perform">Back</Link>
         {:else if currPersonId !== $data.persons[0].id}
-            <button class="btn-secondary" on:click={backParticipant}>Back</button>
+            <button class="btn-secondary back" on:click={backParticipant}>Back</button>
         {/if}
 
         {#if $rankIndex === $data.persons.length - 1}
-            <Link to="/results" class="btn-primary">Continue</Link>
+            <Link to="/results" class="btn-primary next">Continue</Link>
         {:else}
-            <button class="btn-primary" on:click={nextParticipant}>Next</button>
+            <button class="btn-primary next" on:click={nextParticipant}>Next</button>
         {/if}
     </div>
 </PageWrapper>
-
-<style lang="scss">
-    li svg {
-        padding-right: 0.4rem;
-    }
-</style>

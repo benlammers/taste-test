@@ -7,3 +7,5 @@ declare namespace svelte.JSX {
         onfinalize?: (event: CustomEvent<DndEvent> & { target: EventTarget & T }) => void;
     }
 }
+
+declare module 'svelte-scrollto';
