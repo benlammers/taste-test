@@ -28,11 +28,7 @@
     const handleNext = (): void => {
         message = '';
 
-        if ($setupStep === 1) {
-            if (!$category.replace(/\s/g, '')) {
-                message = 'Sample Type must not be blank';
-            } else showNext();
-        } else if ($setupStep === 2) {
+        if ($setupStep === 2) {
             showNext();
         } else if ($setupStep === 3) {
             if ($data.samples.length < 2) {
@@ -142,7 +138,7 @@
         </div>
     {/if}
 
-    <span class="message-wrapper">{message}</span>
+    <span class="message-wrapper text--sm color--red">{message}</span>
 
     <div class="button-wrapper" class:error={message}>
         {#if $setupStep > 1}

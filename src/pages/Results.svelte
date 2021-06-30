@@ -1,14 +1,24 @@
 <script lang="ts">
-    import { Link } from 'svelte-navigator';
+    import { Link, navigate } from 'svelte-navigator';
 
     import { data } from '../stores/data';
 
     import PageWrapper from '../components/PageWrapper.svelte';
     import ParticipantResult from '../components/ParticipantResult.svelte';
+    import { capitalize } from '../util';
+
+    if ($data.results.length === 0) navigate('/');
+
+    interface SampleResult {
+        name: string;
+        score: number;
+        firsts: number;
+        lasts: number;
+    }
 
     let viewResults = false;
 
-    let results = $data.samples.map((sample) => {
+    let results = $data.samples.map<SampleResult>((sample) => {
         return {
             name: sample.name,
             score: $data.results.map((result) => result.rankings.indexOf(sample.id) + 1).reduce((a, b) => a + b, 0),
@@ -23,12 +33,50 @@
         };
     });
 
-    // TODO: Handle ties
-    let overall = [...results].sort((sampleA, sampleB) => sampleA.score - sampleB.score);
-    let mostLoved = [...results].sort((sampleA, sampleB) => sampleB.firsts - sampleA.firsts)[0];
-    let mostHated = [...results].sort((sampleA, sampleB) => sampleB.lasts - sampleA.lasts)[0];
+    const sortByScore = (sampleA: SampleResult, sampleB: SampleResult): number => {
+        return sampleA.score - sampleB.score;
+    };
 
-    $: console.log({ results, data: $data.results });
+    const sortByFirsts = (sampleA: SampleResult, sampleB: SampleResult): number => {
+        return sampleB.firsts - sampleA.firsts;
+    };
+
+    const sortByLasts = (sampleA: SampleResult, sampleB: SampleResult): number => {
+        return sampleB.lasts - sampleA.lasts;
+    };
+
+    const getAllMost = (
+        property: 'lasts' | 'firsts',
+        sortingFunction: (sampleA: SampleResult, sampleB: SampleResult) => number
+    ): { displayString: string; total: number } => {
+        let arrayToSort = [...results];
+        let total = arrayToSort.sort(sortingFunction)[0]?.[property];
+        let allMost = arrayToSort.filter((sampleResult) => sampleResult[property] === total);
+        let displayString: string;
+        if (allMost.length === 1) displayString = capitalize(allMost[0]?.name);
+        else {
+            let lastItem = allMost.pop() as SampleResult;
+            displayString =
+                allMost.map((sampleResult) => capitalize(sampleResult.name)).join(', ') +
+                ' and ' +
+                capitalize(lastItem?.name);
+        }
+        return {
+            displayString,
+            total,
+        };
+    };
+
+    let overall = [...results].sort((sampleA, sampleB) => {
+        let diff = sortByScore(sampleA, sampleB);
+        if (diff === 0) {
+            diff = sortByFirsts(sampleA, sampleB);
+        }
+        return diff;
+    });
+
+    let mostLoved = getAllMost('firsts', sortByFirsts);
+    let mostHated = getAllMost('lasts', sortByLasts);
 </script>
 
 <PageWrapper>
@@ -57,17 +105,20 @@
                 </ol>
             </div>
 
-            <h2>Most Loved</h2>
-            <p>{mostLoved.name}: {mostLoved.firsts} first places</p>
+            <h3>Most Loved</h3>
+            <p class="color--primary text--md">{mostLoved.displayString}</p>
+            <p class="text--sm">with {mostLoved.total} firsts</p>
 
-            <h2>Most Hated</h2>
-            <p>{mostHated.name}: {mostHated.lasts} last places</p>
+            <h3>Most Hated</h3>
+            <p class="color--red text--md">{mostHated.displayString}</p>
+            <p class="text--sm">with {mostHated.total} lasts</p>
 
             <h2>Participants</h2>
             {#each $data.results as result}
                 <ParticipantResult {result} />
             {/each}
         {:else}
+            <p class="text--md">The results are in!</p>
             <button class="btn-primary" on:click|once={() => (viewResults = true)}>View Results</button>
         {/if}
     </div>
@@ -78,3 +129,9 @@
         </div>
     {/if}
 </PageWrapper>
+
+<style lang="scss">
+    .content-wrapper button {
+        justify-self: center;
+    }
+</style>

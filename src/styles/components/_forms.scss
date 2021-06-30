@@ -21,18 +21,20 @@ form label {
 }
 
 form button {
-    border: 1px solid var(--color-secondary);
     background: var(--color-primary);
-    color: #fff;
+    color: var(--color-white);
     height: 4.8rem;
     width: 4.8rem;
     border-radius: 4px;
+    box-shadow: var(--shadow-base);
+    border: none;
 }
 
 form span {
     grid-column: 1 / -1;
-    color: red;
+    color: var(--color-red);
     justify-self: start;
+    font-size: var(--text-sm);
 }
 
 input[type='text'] {
@@ -40,6 +42,7 @@ input[type='text'] {
     border-radius: 4px;
     padding: 0 24px;
     font-size: 1.6rem;
+    box-shadow: var(--shadow-base);
     border: 1px solid var(--color-secondary);
 }
 

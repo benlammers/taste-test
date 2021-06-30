@@ -1,10 +1,12 @@
 <script lang="ts">
-    import { Link } from 'svelte-navigator';
+    import { Link, navigate } from 'svelte-navigator';
 
     import { category } from '../stores/category';
     import { data } from '../stores/data';
 
     import PageWrapper from '../components/PageWrapper.svelte';
+
+    if ($data.samples.length === 0) navigate('/');
 </script>
 
 <PageWrapper>

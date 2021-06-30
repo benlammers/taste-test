@@ -10,9 +10,6 @@
 
 <main>
     <Router>
-        <Route path="/">
-            <Welcome />
-        </Route>
         <Route path="setup">
             <Setup />
         </Route>
@@ -27,6 +24,9 @@
         </Route>
         <Route path="results">
             <Results />
+        </Route>
+        <Route path="*">
+            <Welcome />
         </Route>
     </Router>
 </main>

@@ -12,6 +12,8 @@ a.btn-secondary,
     padding: 1.2rem 1.6rem;
     font-size: var(--text-button);
     border-radius: var(--border-radius);
+    box-shadow: var(--shadow-base);
+    border: none;
 
     text-decoration: none;
     color: var(--color-text);
@@ -19,12 +21,12 @@ a.btn-secondary,
 
 .btn-primary {
     background: var(--color-primary);
-    border: 1px solid var(--color-secondary);
+    // border: 1px solid var(--color-secondary);
 }
 
 .btn-secondary {
     background: var(--color-secondary);
-    border: 1px solid var(--color-primary);
+    // border: 1px solid var(--color-primary);
 }
 
 .button-wrapper {

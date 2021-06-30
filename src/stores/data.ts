@@ -10,41 +10,53 @@ export interface ResultItemType {
     rankings: number[];
 }
 
+export const test = true;
+
 export const data = (() => {
     const { subscribe, set, update } = writable<{
         samples: ListItemType[];
         persons: ListItemType[];
         results: ResultItemType[];
-    }>({
-        samples: [
-            { name: 'guoda', id: 1 },
-            { name: 'cheddar', id: 2 },
-            { name: 'mozerella', id: 3 },
-            { name: 'parmesan', id: 4 },
-        ],
-        persons: [
-            { name: 'Ben', id: 1 },
-            { name: 'Mad', id: 2 },
-            { name: 'George', id: 3 },
-        ],
-        results: [
-            {
-                person: 1,
-                rankings: [1, 2, 3, 4],
-            },
-            {
-                person: 2,
-                rankings: [1, 2, 3, 4],
-            },
-            {
-                person: 3,
-                rankings: [1, 2, 3, 4],
-            },
-        ],
-        // samples: [],
-        // persons: [],
-        // results: [],
-    });
+    }>(
+        test
+            ? {
+                  samples: [
+                      { name: 'guoda', id: 1 },
+                      { name: 'cheddar', id: 2 },
+                      { name: 'mozerella', id: 3 },
+                      { name: 'parmesan', id: 4 },
+                  ],
+                  persons: [
+                      { name: 'Ben', id: 1 },
+                      { name: 'Mad', id: 2 },
+                      { name: 'George', id: 3 },
+                      { name: 'Billy', id: 4 },
+                  ],
+                  results: [
+                      {
+                          person: 1,
+                          rankings: [1, 2, 3, 4],
+                      },
+                      {
+                          person: 2,
+                          rankings: [1, 2, 3, 4],
+                      },
+                      {
+                          person: 3,
+                          rankings: [4, 3, 2, 1],
+                      },
+                      {
+                          person: 4,
+                          rankings: [4, 3, 2, 1],
+                      },
+                  ],
+              }
+            : {
+                  samples: [],
+                  persons: [],
+                  results: [],
+              }
+    );
 
     const addSample = (newSample: string): void => {
         update(({ samples, persons, results }) => {

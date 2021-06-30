@@ -1,7 +1,7 @@
-- handle ties for most loved and most hated
+- fix button styles (anchor tags different)
 - finalize spacing in content-wrapper
-- animate between participants ranks
-- fix button styles
+- animate results?
 - go over font sizes
-- double check message-wrapper stuff
-- fix input styles
+
+
+- clean up and go over variable names ie. participants vs persons

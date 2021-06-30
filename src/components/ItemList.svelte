@@ -9,6 +9,7 @@
     import { flip } from 'svelte/animate';
     import { fly } from 'svelte/transition';
 
+    import { capitalize } from '../util';
     import type { ListItemType } from '../stores/data';
 
     export let items: ListItemType[];
@@ -25,11 +26,11 @@
 
     const handleAddItem = (): void => {
         if (!newItem.replace(/\s/g, '')) {
-            newItemError = `${itemName} must not be blank`;
+            newItemError = `${capitalize(itemName)} must not be blank`;
         } else if (items.filter((item) => item.name.toLowerCase() === newItem.toLowerCase()).length > 0) {
-            newItemError = `${itemName} already exists`;
+            newItemError = `${capitalize(itemName)} already exists`;
         } else {
-            add(newItem);
+            add(newItem.toLowerCase());
             newItem = '';
         }
     };

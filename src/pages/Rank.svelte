@@ -1,9 +1,11 @@
 <script lang="ts">
+    import { onMount } from 'svelte';
     import { fade, fly } from 'svelte/transition';
     import { flip } from 'svelte/animate';
 
-    import { Link } from 'svelte-navigator';
+    import { Link, navigate } from 'svelte-navigator';
     import { dndzone } from 'svelte-dnd-action';
+    import Draggable24 from 'carbon-icons-svelte/lib/Draggable24';
 
     import type { ListItemType } from '../stores/data';
     import { data } from '../stores/data';
@@ -11,10 +13,18 @@
 
     import PageWrapper from '../components/PageWrapper.svelte';
 
-    $: currPersonId = $data.persons[$rankIndex].id;
+    if ($data.samples.length === 0) navigate('/');
+
+    let prevIndex: number;
+    $: currPersonId = $data.persons[$rankIndex]?.id;
+
+    onMount(() => {
+        prevIndex = $rankIndex === 1 ? 2 : $rankIndex;
+    });
 
     function backParticipant(): void {
         if ($rankIndex !== 0) {
+            prevIndex = $rankIndex;
             rankIndex.decrement();
         } else {
             console.error('Current index should not go below 0');
@@ -22,6 +32,7 @@
     }
 
     function nextParticipant(): void {
+        prevIndex = $rankIndex;
         rankIndex.increment();
     }
 
@@ -56,24 +67,37 @@
         return $data.samples.findIndex((sample) => sample.id === id) + 1;
     }
 
-    // TODO: Is this accessible
     let dropTargetStyle = { outline: 'none' };
 
-    let prevIndex: number;
     let transitioning = false;
 
     const onTransitionEnd = () => {
         transitioning = false;
+    };
+
+    const getOutX = (): -300 | 300 => {
+        if (prevIndex <= $rankIndex) return -300;
+        else return 300;
+    };
+
+    const getInX = (): -300 | 300 => {
+        if (prevIndex <= $rankIndex) return 300;
+        else return -300;
     };
 </script>
 
 <PageWrapper>
     <h1>Input Rankings</h1>
 
-    {#each $data.persons as person (person.id)}
+    {#each $data.persons as person, i (person.id)}
         {#if currPersonId === person.id}
             <h2 class="subtitle-wrapper" transition:fade|local>{person.name}</h2>
-            <div class="content-wrapper" transition:fly|local={{ x: 300 }} on:outroend={onTransitionEnd}>
+            <div
+                class="content-wrapper"
+                in:fly|local={{ x: getInX(), delay: 300 }}
+                out:fly|local={{ x: getOutX() }}
+                on:outroend={onTransitionEnd}
+            >
                 <div class="ranked-list">
                     <p class="text--sm font--thick">Rank</p>
                     <div>
@@ -94,10 +118,14 @@
                                 <span>
                                     {tasteItem.name}
                                 </span>
+                                <div>
+                                    <Draggable24 />
+                                </div>
                             </li>
                         {/each}
                     </ol>
                 </div>
+                <p class="text--xs">Drag and drop items to reorder</p>
                 <p class="text--sm">Green number is order in which samples were tasted</p>
             </div>
         {/if}
@@ -117,3 +145,9 @@
         {/if}
     </div>
 </PageWrapper>
+
+<style lang="scss">
+    li svg {
+        padding-right: 0.4rem;
+    }
+</style>
