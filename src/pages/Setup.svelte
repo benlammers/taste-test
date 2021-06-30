@@ -83,7 +83,7 @@
                 <input
                     type="text"
                     id="sample-type"
-                    placeholder="Category of Samples"
+                    placeholder="ie. cheese, orange juice, etc"
                     bind:value={$category}
                     on:focus={() => (sampleTypeError = '')}
                 />
@@ -96,7 +96,7 @@
             </form>
         </div>
     {:else if $setupStep === 2 && !transitioning}
-        <p class="subtitle-wrapper text--sm" transition:fade|local>Today we will be sampling</p>
+        <p class="subtitle-wrapper text--sm" transition:fade|local>Today you will be sampling</p>
         <div
             class="content-wrapper"
             in:fly|local={{ x: prevStep === 2 ? 300 : -300 }}
@@ -120,9 +120,9 @@
                 items={$data.samples}
                 add={data.addSample}
                 remove={data.removeSample}
-                label={`Add type of ${$category}`}
+                label={`Add type of ${$category.toLowerCase()}`}
                 itemName={$category}
-                placeholder={`Type of ${$category}`}
+                placeholder={`Type of ${$category.toLowerCase()}`}
                 isAlphanumerical={$data.isAlphanumerical}
             />
             <div class="toggle-wrapper">
