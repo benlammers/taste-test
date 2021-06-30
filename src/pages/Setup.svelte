@@ -58,6 +58,7 @@
     };
 
     const showPrev = (): void => {
+        message = '';
         prevStep = $setupStep;
         setupStep.decrement();
         transitioning = true;
