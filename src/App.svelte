@@ -39,7 +39,7 @@
     main {
         min-height: 100%;
         width: 100%;
-        background: var(--color-subtle);
+        background-color: var(--color-subtle);
         display: grid;
         text-align: center;
     }
