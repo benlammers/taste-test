@@ -99,7 +99,9 @@
                         <div>
                             {#each overall as result, i}
                                 <div>
-                                    <span>{i + 1}<sup>{i === 0 ? 'st' : i > 1 ? 'th' : 'nd'}</sup></span>
+                                    <span
+                                        >{i + 1}<sup>{i === 0 ? 'st' : i === 1 ? 'nd' : i > 2 ? 'th' : 'rd'}</sup></span
+                                    >
                                 </div>
                             {/each}
                         </div>

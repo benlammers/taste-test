@@ -18,7 +18,7 @@
         <p class="text--sm font--thick">Rank</p>
         <div>
             {#each result.rankings as ranking, i}
-                <div><span>{i + 1}<sup>{i === 0 ? 'st' : i > 1 ? 'th' : 'nd'}</sup></span></div>
+                <div><span>{i + 1}<sup>{i === 0 ? 'st' : i === 1 ? 'nd' : i > 2 ? 'th' : 'rd'}</sup></span></div>
             {/each}
         </div>
         <ol>
