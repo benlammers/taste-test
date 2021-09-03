@@ -4,6 +4,7 @@
 - [Purpose](#purpose)
 - [Description](#description)
 - [Tech Stack](#tech-stack)
+- [Getting Started](#getting-started)
 - [Challenges](#challenges)
 - [Possible Improvements](#possible-improvements)
 
