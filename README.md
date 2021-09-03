@@ -17,6 +17,11 @@ This application can be used to streamline taste tests, specifically being used 
 - [Svelte](https://svelte.dev/docs)
 - [SASS](https://sass-lang.com/documentation)
 
+## Getting Started
+To visit the hosted app [click here](https://taste-test.vercel.app/)
+
+To run locally, clone the repository locally and navigate into the folder then install dependencies by running `npm install` then run the app by calling `npm start` or `npm run dev` depending on if you wish to develop on the application.
+
 ## Challenges
 The most prevalent and obvious challenge in creating this app was learning Svelte. However, the use case is not very complex and the docuementation provided sufficient explanation and examples to complete the project. I was very impressed with the built in features and lack of boilerplate in Svelte and plan to use it for more projects in the future. A specific feature that took time to understand and complete was the page transitions using Svelte's built in transitions. I solved this by creating a component called PageWrapper which wrapped each page and handled the timing of the unmount and fade of the previous page while the next page waits to fade in.
 
