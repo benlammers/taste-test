@@ -19,7 +19,7 @@ This application can be used to streamline taste tests, specifically being used 
 - [SASS](https://sass-lang.com/documentation)
 
 ## Getting Started
-To visit the hosted app [click here](https://taste-test.vercel.app/)
+[Visit the hosted app](https://taste-test.vercel.app/)
 
 To run locally, clone the repository locally and navigate into the folder then install dependencies by running `npm install` then run the app by calling `npm start` or `npm run dev` depending on if you wish to develop on the application.
 
